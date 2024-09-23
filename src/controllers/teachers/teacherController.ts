@@ -1,14 +1,6 @@
 import { Request, Response } from 'express';
-import { insertPost, getAllPosts, findPostById, updatePostById, Post, findPostByIdTeacher, deletePostById, postExists, searchPostsByKeyword } from '../models/models';
-
-export const getPosts = async (req: Request, res: Response) => {
-  try {
-    const posts = await getAllPosts(req.db);  // Acesso à conexão do banco de dados
-    res.json(posts);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-};
+import { insertPost, updatePostById, findPostByIdTeacher, deletePostById, postExists, searchPostsByKeyword } from '../../models/teachers/teacherModel';
+import { Post } from '../../models/posts/post.interface';
 
 export const createPost = async (req: Request, res: Response): Promise<void> => {
   const { title, author, description, creation, idteacher } = req.body;
@@ -36,32 +28,12 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
 
   try {
     await insertPost(req.db, newPost);
-    res.status(201).json({ message: 'Post criado com sucesso' });
+    res.status(201).json(newPost);
   } catch (err) {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
-export const getPostById = async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.params;
-
-  if (isNaN(Number(id))) {
-    res.status(400).json({ message: 'ID em formato inválido' });
-    return;
-  }
-
-  try {
-    const post = await findPostById(req.db, Number(id));
-
-    if (!post) {
-      res.status(404).json({ message: 'Post não encontrado' });
-    } else {
-      res.json(post);
-    }
-  } catch (err) {
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-};
 
 export const getPostByIdTeacher = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
@@ -88,6 +60,12 @@ export const getPostByIdTeacher = async (req: Request, res: Response): Promise<v
 export const updatePost = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;  // Pega o id do post da URL
   const { title, author, description, creation, update_date, idteacher } = req.body;
+    // Verificar se o post existe
+    const exists = await postExists(req.db, Number(id));
+    if (!exists) {
+      res.status(404).json({ message: 'Post não encontrado' });
+      return;
+    }
 
   // Verificar se todos os campos obrigatórios foram fornecidos
   if (!title || !author || !description || !creation || !idteacher || !update_date) {
@@ -105,14 +83,6 @@ export const updatePost = async (req: Request, res: Response): Promise<void> => 
     res.status(400).json({ message: 'Data de Criação inválida!' });
     return;
   }
-
-  // Verificar se o post existe
-  const exists = await postExists(req.db, Number(id));
-  if (!exists) {
-    res.status(404).json({ message: 'Post não encontrado' });
-    return;
-  }
-
   // Criar o objeto post
   const updatedPost: Post = {
     title,
@@ -125,7 +95,7 @@ export const updatePost = async (req: Request, res: Response): Promise<void> => 
 
   try {
     await updatePostById(req.db, Number(id), updatedPost);
-    res.status(200).json({ message: 'Post atualizado com sucesso!' });
+    res.status(200).json(updatedPost);
   } catch (err) {
     res.status(500).json({ message: 'Internal Server Error' });
   }
@@ -139,13 +109,7 @@ const isValidDate = (date: string): boolean => {
 // Controlador para excluir um post existente
 export const deletePost = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-
   try {
-    if (isNaN(Number(id))) {
-      res.status(400).json({ message: 'ID em formato inválido' });
-      return;
-    }
-
     // Verificar se o post existe
     const exists = await postExists(req.db, Number(id));
     if (!exists) {
@@ -153,9 +117,13 @@ export const deletePost = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
+    if (isNaN(Number(id))) {
+      res.status(400).json({ message: 'ID em formato inválido' });
+      return;
+    }
+    
     // Tenta excluir o post pelo ID
     await deletePostById(req.db, Number(id));
-
     res.status(200).json({ message: 'Post deletado com sucesso!' });
   } catch (err) {
     res.status(500).json({ message: 'Internal Server Error' });

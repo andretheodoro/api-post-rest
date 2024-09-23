@@ -1,6 +1,7 @@
 import express from 'express';
-import postRoutes from './routes/postRoutes';  // Importa as rotas de usuários
-import { dbMiddleware } from './middleware/dbMiddleware';  // Importa o middleware de conexão com o banco
+import studentRouter from './routes/students/studentRoutes';  
+import teacherRouter from './routes/teachers/teacherRoutes';  
+import { dbMiddleware } from './middleware/dbMiddleware';
 
 export const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use(dbMiddleware);
 
 // Rotas
-app.use('/api/posts', postRoutes);  // Define o prefixo das rotas de usuários
+app.use('/api/posts', teacherRouter);  
+app.use('/api/posts', studentRouter);  
 
 export default app;
