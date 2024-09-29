@@ -18,22 +18,34 @@ export const insertPost = async (db: Pool, post: Post): Promise<void> => {
 
 export const findPostByIdTeacher = async (db: Pool, id: number): Promise<Post[]> => {
   try {
-    const result = await db.query('SELECT * FROM posts WHERE idteacher = $1', [id]);
+    const result = await db.query(`SELECT id, title, author, description, to_char(CREATION, 'YYYY-MM-DD') creation, update_date, idteacher FROM posts WHERE idteacher = $1`, [id]);
     return result.rows;
   } catch (err) {
     console.error('Erro ao pesquisar Post por ID no BD', err);
     throw err;
   }
 };
+export const findLastPost = async (db: Pool): Promise<number | null> => {
+    try {
+      const result = await db.query('SELECT max(id) AS maxid FROM posts');
+      const maxId = result.rows[0].maxid;
+  
+      return maxId !== null ? maxId : null; // Retorna o maxId ou null se não houver posts
+    } catch (err) {
+      console.error('Erro ao pesquisar Post por ID no BD', err);
+      throw err;
+    }
+};
+  
 
 // Função para atualizar um post existente
 export const updatePostById = async (db: Pool, id: number, post: Post): Promise<void> => {
-  const { title, author, description, creation, update_date, idteacher } = post;
+  const { title, author, description, update_date, idteacher } = post;
 
   try {
     await db.query(
-      'UPDATE posts SET title = $1, author = $2, description = $3, creation = $4, update_date = $5, idteacher = $6 WHERE id = $7',
-      [title, author, description, creation, update_date, idteacher, id]
+      'UPDATE posts SET title = $1, author = $2, description = $3, update_date = $4, idteacher = $5 WHERE id = $6',
+      [title, author, description, update_date, idteacher, id]
     );
   } catch (err) {
     console.error('Erro ao atualizar um Post', err);
@@ -67,7 +79,7 @@ export const searchPostsByKeyword = async (db: Pool, keyword: string) => {
   try {
     const searchTerm = `%${keyword}%`;  // Adicionar '%' para busca com LIKE
     const result = await db.query(
-      `SELECT id, title, author, description, creation, idteacher 
+      `SELECT id, title, author, description, to_char(CREATION, 'YYYY-MM-DD') creation, idteacher 
        FROM posts 
        WHERE title ILIKE $1 OR description ILIKE $1`, 
       [searchTerm]

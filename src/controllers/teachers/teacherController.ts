@@ -1,19 +1,13 @@
 import { Request, Response } from 'express';
-import { insertPost, updatePostById, findPostByIdTeacher, deletePostById, postExists, searchPostsByKeyword } from '../../models/teachers/teacherModel';
+import { insertPost, updatePostById, findPostByIdTeacher, deletePostById, postExists, searchPostsByKeyword, findLastPost } from '../../models/teachers/teacherModel';
 import { Post } from '../../models/posts/post.interface';
 
 export const createPost = async (req: Request, res: Response): Promise<void> => {
-  const { title, author, description, creation, idteacher } = req.body;
+  const { title, author, description, idteacher } = req.body;
 
   // Verificar se todos os campos obrigatórios foram fornecidos
-  if (!title || !author || !description || !creation || !idteacher) {
+  if (!title || !author || !description || !idteacher) {
     res.status(400).json({ message: 'Verifique os campos obrigatórios' });
-    return;
-  }
-
-  // Validar a data
-  if (!isValidDate(creation)) {
-    res.status(400).json({ message: 'Data de Criação inválida!' });
     return;
   }
 
@@ -22,7 +16,7 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
     title,
     author,
     description,
-    creation: new Date(creation),
+    creation: new Date(),
     idteacher: Number(idteacher),
   };
 
@@ -59,7 +53,7 @@ export const getPostByIdTeacher = async (req: Request, res: Response): Promise<v
 // Controlador para atualizar um post existente
 export const updatePost = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;  // Pega o id do post da URL
-  const { title, author, description, creation, update_date, idteacher } = req.body;
+  const { title, author, description, idteacher } = req.body;
     // Verificar se o post existe
     const exists = await postExists(req.db, Number(id));
     if (!exists) {
@@ -68,28 +62,18 @@ export const updatePost = async (req: Request, res: Response): Promise<void> => 
     }
 
   // Verificar se todos os campos obrigatórios foram fornecidos
-  if (!title || !author || !description || !creation || !idteacher || !update_date) {
+  if (!title || !author || !description || !idteacher) {
     res.status(400).json({ message: 'Verifique os campos obrigatórios!' });
     return;
   }
 
-   // Validar a data
-   if (!isValidDate(creation)) {
-    res.status(400).json({ message: 'Data de Criação inválida!' });
-    return;
-  }
-
-  if (!isValidDate(update_date)) {
-    res.status(400).json({ message: 'Data de Criação inválida!' });
-    return;
-  }
   // Criar o objeto post
   const updatedPost: Post = {
     title,
     author,
     description,
-    creation: new Date(creation), 
-    update_date: new Date(update_date),
+    creation: new Date(),
+    update_date: new Date(),
     idteacher: Number(idteacher),
   };
 
@@ -146,6 +130,20 @@ export const searchPosts = async (req: Request, res: Response): Promise<void> =>
       res.status(404).json({ message: 'Nenhum Post encontrado para a palavra chave informada.' });
     } else {
       res.status(200).json(posts);
+    }
+  } catch (err) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+export const getLastPost = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const idPost = await findLastPost(req.db);
+
+    if (idPost == null) {
+      res.status(404).json({ message: 'Professor(a) não possui Posts criados.' });
+    } else {
+      res.json({ id: idPost }); // Retorna apenas o id em um objeto
     }
   } catch (err) {
     res.status(500).json({ message: 'Internal Server Error' });

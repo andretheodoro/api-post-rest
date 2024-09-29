@@ -6,4 +6,5 @@ module.exports = {
     '^.+\\.ts$': 'ts-jest',
   },
   testMatch: ['**/tests/**/*.test.ts'],
+  setupFiles: ['./setupTests.js'],  // Se você tiver esse arquivo para configurar o dotenv
 };
