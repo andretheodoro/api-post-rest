@@ -1,22 +1,28 @@
-import { Router } from 'express';
-import { createPost, updatePost, getPostByIdTeacher, deletePost, searchPosts} from '../../controllers/teachers/teacherController';
-import { validateToken } from '../../middleware/authMiddleware';
+import { Router } from 'express'
+import {
+    createPost,
+    updatePost,
+    getPostByIdTeacher,
+    deletePost,
+    searchPosts,
+} from '../../controllers/teachers/teacherController'
+import { authMiddleware } from '../../middleware/authMiddleware'
 
-const teacherRouter = Router();
+const teacherRouter = Router()
 
 //GET /posts/search - Busca de Posts:
-teacherRouter.get('/search', validateToken, searchPosts);
+teacherRouter.get('/search', authMiddleware, searchPosts)
 
 //POST /posts - Criação de postagens:
-teacherRouter.post('/', validateToken, createPost);
+teacherRouter.post('/', authMiddleware, createPost)
 
 //PUT /posts/:id - Edição de postagens:
-teacherRouter.put('/:id', validateToken, updatePost);  
+teacherRouter.put('/:id', authMiddleware, updatePost)
 
 //GET /posts - Listagem de Todas as Postagens:
-teacherRouter.get('/professor/:id', validateToken, getPostByIdTeacher);
+teacherRouter.get('/professor/:id', authMiddleware, getPostByIdTeacher)
 
 //DELETE /posts/:id - Exclusão de Postagens:
-teacherRouter.delete('/:id', validateToken, deletePost); 
+teacherRouter.delete('/:id', authMiddleware, deletePost)
 
-export default teacherRouter;
+export default teacherRouter

@@ -1,10 +1,10 @@
-import {getLastPost} from '../../controllers/posts/postController';
-import { Router } from 'express';
-import { validateToken } from '../../middleware/authMiddleware';
+import { getLastPost } from '../../controllers/posts/postController'
+import { Router } from 'express'
+import { authMiddleware } from '../../middleware/authMiddleware'
 
-const postRouter = Router();
+const postRouter = Router()
 
 //GET /posts - Listagem de Último Post Criado:
-postRouter.get('/lastPost', validateToken, getLastPost);
+postRouter.get('/lastPost', authMiddleware, getLastPost)
 
-export default postRouter;
+export default postRouter

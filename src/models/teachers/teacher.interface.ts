@@ -1,4 +1,5 @@
-export interface Teacher {
-    id: number;
-    name: string;
+export interface ITeacher {
+    id: number
+    name: string
+    password: string
 }
