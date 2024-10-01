@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createPost, updatePost, getPostByIdTeacher, deletePost, searchPosts, getLastPost} from '../../controllers/teachers/teacherController';
+import { createPost, updatePost, getPostByIdTeacher, deletePost, searchPosts} from '../../controllers/teachers/teacherController';
 import { validateToken } from '../../middleware/authMiddleware';
 
 const teacherRouter = Router();
@@ -18,9 +18,5 @@ teacherRouter.get('/professor/:id', validateToken, getPostByIdTeacher);
 
 //DELETE /posts/:id - Exclusão de Postagens:
 teacherRouter.delete('/:id', validateToken, deletePost); 
-
-//GET /posts - Listagem de Último Post Criado:
-teacherRouter.get('/professor', validateToken, getLastPost);
-
 
 export default teacherRouter;

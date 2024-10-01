@@ -2,6 +2,7 @@ import express from 'express';
 import studentRouter from './routes/students/studentRoutes';  
 import teacherRouter from './routes/teachers/teacherRoutes';  
 import { dbMiddleware } from './middleware/dbMiddleware';
+import postRouter from './routes/posts/postsRoutes';
 
 export const app = express();
 
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(dbMiddleware);
 
 // Rotas
+app.use('/api/posts', postRouter);  
 app.use('/api/posts', teacherRouter);  
 app.use('/api/posts', studentRouter);  
 

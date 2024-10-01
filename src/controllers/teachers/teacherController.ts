@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { insertPost, updatePostById, findPostByIdTeacher, deletePostById, postExists, searchPostsByKeyword, findLastPost } from '../../models/teachers/teacherModel';
+import { insertPost, updatePostById, findPostByIdTeacher, deletePostById, postExists, searchPostsByKeyword } from '../../models/teachers/teacherModel';
 import { Post } from '../../models/posts/post.interface';
 
 export const createPost = async (req: Request, res: Response): Promise<void> => {
@@ -136,16 +136,3 @@ export const searchPosts = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
-export const getLastPost = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const idPost = await findLastPost(req.db);
-
-    if (idPost == null) {
-      res.status(404).json({ message: 'Professor(a) não possui Posts criados.' });
-    } else {
-      res.json({ id: idPost }); // Retorna apenas o id em um objeto
-    }
-  } catch (err) {
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-};

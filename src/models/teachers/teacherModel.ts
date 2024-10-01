@@ -79,7 +79,7 @@ export const searchPostsByKeyword = async (db: Pool, keyword: string) => {
   try {
     const searchTerm = `%${keyword}%`;  // Adicionar '%' para busca com LIKE
     const result = await db.query(
-      `SELECT id, title, author, description, to_char(CREATION, 'YYYY-MM-DD') creation, idteacher 
+      `SELECT id, title, author, description, to_char(CREATION, 'YYYY-MM-DD') creation, update_date, idteacher 
        FROM posts 
        WHERE title ILIKE $1 OR description ILIKE $1`, 
       [searchTerm]
