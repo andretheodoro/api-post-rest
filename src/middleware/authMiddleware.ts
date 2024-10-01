@@ -1,20 +1,25 @@
-import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken'
+import { env } from '../env'
 
-// Middleware de validação de autenticação
-export const validateToken = (req: Request, res: Response, next: NextFunction): void => {
-  const token = req.headers['authorization'];  // Pega o token do cabeçalho Authorization
+export const generateToken = (userName: string) => {
+    const payload = { userName: userName }
+    const token = jwt.sign(payload, env.JWT_SECRET, { expiresIn: '2m' }) // O token expira em 1 hora
+    return token
+}
 
-  if (!token) {
-    res.status(401).json({ message: 'Access denied. No token provided.' });
-    return;  // Garantir que a função pare aqui
-  }
-
-  // Exemplo básico de validação de token
-  if (token !== '22e69816-4b10-46b2-9b77-6385860deed3') {
-    res.status(403).json({ message: 'Invalid token' });
-    return;  // Garantir que a função pare aqui
-  }
-
-  // Se o token for válido, prossegue para o próximo middleware ou rota
-  next();
-};
+export const authMiddleware = (req: any, res: any, next: any) => {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1] // "Bearer TOKEN"
+    console.log('???', authHeader)
+    if (!token) {
+        return res.status(403).send('Token não fornecido')
+    }
+    console.log('???', token)
+    jwt.verify(`${token}`, env.JWT_SECRET, (err: any, decoded: any) => {
+        if (err) {
+            return res.status(401).send('Token inválido')
+        }
+        req.userId = decoded.id // Armazena o ID do usuário na requisição
+        next()
+    })
+}
