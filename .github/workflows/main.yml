@@ -22,15 +22,15 @@ jobs:
             DB_PORT: ${{ secrets.DB_PORT }}
             JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
-        services:
-            postgres:
-                image: postgres:13
-                env:
-                    POSTGRES_DB: $DB_NAME
-                    POSTGRES_USER: $DB_USER
-                    POSTGRES_PASSWORD: $DB_PASSWORD
-                ports:
-                    - $DB_PORT:$DB_PORT
+        # services:
+        #     postgres:
+        #         image: postgres:13
+        #         env:
+        #             POSTGRES_DB: $DB_NAME
+        #             POSTGRES_USER: $DB_USER
+        #             POSTGRES_PASSWORD: $DB_PASSWORD
+        #         ports:
+        #             - $DB_PORT:$DB_PORT
         steps:
             - name: Checar o repositório
               uses: actions/checkout@v4
