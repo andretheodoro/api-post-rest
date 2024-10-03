@@ -1,0 +1,62 @@
+name: Build and Push Docker Image
+
+on:
+    push:
+        branches:
+            - develop
+    pull_request:
+        branches:
+            - main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        env:
+            DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+            # DB_HOST: ${{ secrets.DB_HOST }}
+            DB_USER: ${{ secrets.DB_USER }}
+            DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+            DB_NAME: ${{ secrets.DB_NAME }}
+            DB_PORT: ${{ secrets.DB_PORT }}
+            JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+        services:
+            postgres:
+                image: postgres:13
+                env:
+                    POSTGRES_DB: $DB_NAME
+                    POSTGRES_USER: $DB_USER
+                    POSTGRES_PASSWORD: $DB_PASSWORD
+                ports:
+                    - $DB_PORT:$DB_PORT
+        steps:
+            - name: Checar o repositório
+              uses: actions/checkout@v4
+
+            - name: Configurar o Docker
+              run: |
+                  docker login -u $DOCKER_USERNAME --password $DOCKER_PASSWORD
+                  docker build -t $DOCKER_USERNAME/posts-api:latest --build-arg --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} .
+                  docker push $DOCKER_USERNAME/posts-api:latest
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20' # ou a versão que você está usando
+
+            - name: Install dependencies
+              run: npm install # ou o comando correspondente ao seu gerenciador de pacotes
+
+            - name: Run tests
+              run: npm test # ou o comando que você usa para rodar os testes
+
+            - name: Merge to Main
+              if: success() # somente se os testes forem bem-sucedidos
+              run: |
+                  git config --global user.name 'github-actions'
+                  git config --global user.email 'actions@github.com'
+                  git checkout main
+                  git merge develop
+                  git push origin main
