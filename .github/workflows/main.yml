@@ -75,6 +75,7 @@ jobs:
               run: |
                   git config --global user.name 'github-actions'
                   git config --global user.email 'actions@github.com'
-                  git checkout main
+                  git fetch origin main  # Certifique-se de buscar o branch main
+                  git checkout main || git checkout -b main  # Cria o branch se não existir
                   git merge develop
                   git push origin main
