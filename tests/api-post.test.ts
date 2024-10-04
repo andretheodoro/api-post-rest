@@ -236,7 +236,7 @@ if (env.NODE_ENV == 'development') {
 } else {
     if (env.NODE_ENV == 'test') {
         describe('Env Test git action', () => {
-            it('Deverá excluir um post existente', async () => {
+            it('Deverá excluir um post existente', () => {
                 return
             })
         })
