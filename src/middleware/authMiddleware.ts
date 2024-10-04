@@ -10,11 +10,11 @@ export const generateToken = (userName: string) => {
 export const authMiddleware = (req: any, res: any, next: any) => {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1] // "Bearer TOKEN"
-    console.log('???', authHeader)
+    // console.log('???', authHeader)
     if (!token) {
         return res.status(403).send('Token não fornecido')
     }
-    console.log('???', token)
+    // console.log('???', token)
     jwt.verify(`${token}`, env.JWT_SECRET, (err: any, decoded: any) => {
         if (err) {
             return res.status(401).send('Token inválido')

@@ -1,2 +1,2 @@
-// setupTests.js
-require('dotenv').config({ path: '.env.test' });
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+require('dotenv').config({ path: '.env.test' })

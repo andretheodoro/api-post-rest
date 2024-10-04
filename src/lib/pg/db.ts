@@ -18,9 +18,11 @@ class Database {
         this.connection()
     }
 
-    private async connection() {
+    async connection() {
+        // console.log(CONFIG)
         try {
             this.client = await this.pool.connect()
+            console.log('connected')
         } catch (error) {
             console.error(`Error connecting to database: ${error}`)
 
@@ -31,6 +33,14 @@ class Database {
     get clientInstance() {
         return this.client
     }
+
+    // async disconnect() {
+    //     if (this.client) {
+    //         this.client.release() // Libera o cliente
+    //         this.client = undefined // Limpa a referência
+    //     }
+    //     await this.pool.end()
+    // }
 }
 
 export const database = new Database()
