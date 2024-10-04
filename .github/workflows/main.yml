@@ -67,30 +67,22 @@ jobs:
             - name: Run tests
               run: npm test # ou o comando que você usa para rodar os testes
 
-    create-pull-request:
+    commit-to-main:
         runs-on: ubuntu-latest
         needs: build-and-test
         if: success()
 
         steps:
             - name: Checkout do repositório
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
 
             - name: Configurar Git
               run: |
                   git config --global user.name 'github-actions'
                   git config --global user.email '${{ secrets.EMAIL_PULLREQUEST }}'
 
-            - name: Criar Pull Request
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Comitar mudanças
               run: |
-                  curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
-                  -H "Accept: application/vnd.github.v3+json" \
-                  https://api.github.com/repos/${{ github.repository }}/pulls \
-                  -d '{
-                    "title": "Merge de develop para main",
-                    "head": "develop",
-                    "base": "main",
-                    "body": "Pull request gerado automaticamente após os testes passarem."
-                  }'
+                  git add .
+                  git commit -m "Atualizações após testes bem-sucedidos"
+                  git push origin main
