@@ -4,9 +4,6 @@ on:
     push:
         branches:
             - develop
-    pull_request:
-        branches:
-            - main
 
 jobs:
     build:
@@ -70,12 +67,36 @@ jobs:
             - name: Run tests
               run: npm test # ou o comando que você usa para rodar os testes
 
-            - name: Merge to Main
-              if: success() # somente se os testes forem bem-sucedidos
+            # - name: Merge to Main
+            #   if: success() # somente se os testes forem bem-sucedidos
+            #   run: |
+            #       git config --global user.name 'github-actions'
+            #       git config --global user.email 'actions@github.com'
+            #       git fetch origin main  # Certifique-se de buscar o branch main
+            #       git checkout main || git checkout -b main  # Cria o branch se não existir
+            #       git merge develop --allow-unrelated-histories  # Adiciona a opção
+            #       git push origin main
+
+            - name: Checkout main branch
+              uses: actions/checkout@v2
+              with:
+                  ref: main
+
+            - name: Set up Git
               run: |
                   git config --global user.name 'github-actions'
                   git config --global user.email 'actions@github.com'
-                  git fetch origin main  # Certifique-se de buscar o branch main
-                  git checkout main || git checkout -b main  # Cria o branch se não existir
-                  git merge develop --allow-unrelated-histories  # Adiciona a opção
-                  git push origin main
+
+            - name: Fetch develop branch
+              run: |
+                  git fetch origin develop:develop
+
+            - name: Rebase develop onto main
+              run: |
+                  git rebase develop
+
+            - name: Push changes
+              run: |
+                  git push origin main --force
+              # env:
+              #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
