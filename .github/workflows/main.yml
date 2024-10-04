@@ -101,7 +101,9 @@ jobs:
             #         echo "Nada para commit, trabalhando tree está limpa."
             #       fi
             - name: Comitar e fazer merge para main
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }} # Usar o PAT para push
               run: |
                   git checkout main
                   git merge develop
-                  git push origin main
+                  git push https://${{ secrets.GITHUB_TOKEN }}:x-oauth-basic@github.com/${{ github.repository }} main
