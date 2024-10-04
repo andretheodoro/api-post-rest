@@ -56,6 +56,17 @@ jobs:
             - name: Install dependencies
               run: npm install # ou o comando correspondente ao seu gerenciador de pacotes
 
+            - name: Set environment variables
+              run: |
+                  echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
+                  echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> $GITHUB_ENV
+                  echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
+                  echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
+                  echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
+                  echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+                  echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
+                  echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
+
             - name: Run tests
               run: npm test # ou o comando que você usa para rodar os testes
 
