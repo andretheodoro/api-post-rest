@@ -76,15 +76,30 @@ jobs:
             - name: Checkout do repositório
               uses: actions/checkout@v4
               with:
-                  ref: main
+                  ref: develop
 
             - name: Configurar Git
               run: |
                   git config --global user.name 'github-actions'
                   git config --global user.email '${{ secrets.EMAIL_PULLREQUEST }}'
 
-            - name: Comitar mudanças
-              run: |
-                  git add .
-                  git commit -m "Atualizações após testes bem-sucedidos"
-                  git push origin main
+            # - name: Comitar mudanças
+            #   run: |
+            #       git add .
+            #       git commit -m "Atualizações após testes bem-sucedidos"
+            #       git push origin main
+
+            # - name: Comitar mudanças se houver
+            #   run: |
+            #       git add .
+            #       if [ -n "$(git status --porcelain)" ]; then
+            #         git commit -m "Atualizações após testes bem-sucedidos"
+            #         git push origin main
+            #       else
+            #         echo "Nada para commit, trabalhando tree está limpa."
+            #       fi
+            - name: Comitar e fazer merge para main
+            run: |
+              git checkout main
+              git merge develop
+              git push origin main
