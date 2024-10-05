@@ -11,7 +11,7 @@ import { authMiddleware } from '../../middleware/authMiddleware'
 const teacherRouter = Router()
 
 //GET /posts/search - Busca de Posts:
-teacherRouter.get('/search', authMiddleware, searchPosts)
+teacherRouter.get('/search', searchPosts)
 
 //POST /posts - Criação de postagens:
 teacherRouter.post('/', authMiddleware, createPost)
