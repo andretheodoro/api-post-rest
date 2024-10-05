@@ -3,14 +3,14 @@ import { env } from '../env'
 
 export const generateToken = (userName: string) => {
     const payload = { userName: userName }
-    const token = jwt.sign(payload, env.JWT_SECRET, { expiresIn: '2m' }) // O token expira em 1 hora
+    const token = jwt.sign(payload, env.JWT_SECRET, { expiresIn: '50m' }) // O token expira em 1 hora
     return token
 }
 
 export const authMiddleware = (req: any, res: any, next: any) => {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1] // "Bearer TOKEN"
-    // console.log('???', authHeader)
+    console.log('???', authHeader)
     if (!token) {
         return res.status(403).send('Token não fornecido')
     }

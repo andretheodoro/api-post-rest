@@ -106,6 +106,49 @@ export const updatePost = async (
     }
 }
 
+/**
+ * @swagger
+ * /api/posts/{id}:
+ *   delete:
+ *     summary: Excluir Post
+ *     description: Excluir o post pelo ID
+ *     tags: [Teacher]
+ *     parameters:
+ *      - name: id
+ *        required: true
+ *        in: path
+ *        schema:
+ *          type: number
+ *     security:
+ *      - jwt: []  # Indica que este endpoint requer autenticação JWT
+ *
+ *     responses:
+ *           200:
+ *             content:
+ *              application/json:
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                      example: Post deletado com sucesso
+ *
+ *           404:
+ *             content:
+ *              application/json:
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                      example: Post não encontrado
+ * components:
+ *  securitySchemes:
+ *      jwt:
+ *          type: http
+ *          scheme: bearer
+ *          bearerFormat: JWT
+ */
 // Controlador para excluir um post existente
 export const deletePost = async (
     req: Request,
@@ -130,6 +173,64 @@ export const deletePost = async (
     }
 }
 
+/**
+ * @swagger
+ * /api/posts/search:
+ *   get:
+ *     summary: Busca Post keyword
+ *     description: Retorna lista de post que contenham o keyword informado em pesquisa
+ *     tags: [Student]
+ *     parameters:
+ *      - name: keyword
+ *        required: true
+ *        in: query
+ *        schema:
+ *          type: string
+ *
+ *     responses:
+ *           200:
+ *             description: Lista de Posts encontrados
+ *             content:
+ *              application/json:
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                    id:
+ *                      type: number
+ *                    title:
+ *                      type: string
+ *                    author:
+ *                      type: string
+ *                    description:
+ *                      type: string
+ *                    creation:
+ *                      type: string
+ *                      format: date
+ *                    update_date:
+ *                      type: string
+ *                      format: date-time
+ *                    idteacher:
+ *                      type: number
+ *
+ *           400:
+ *             content:
+ *              application/json:
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                      example: Palavra chave é obrigatória
+ *           404:
+ *             content:
+ *              application/json:
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                      example: Nenhum Post encontrado para a palavra chave informada.
+ */
 // Controlador para buscar posts por palavra-chave
 export const searchPosts = async (
     req: Request,
@@ -161,10 +262,10 @@ export const searchPosts = async (
 
 /**
  * @swagger
- * /users:
+ * /api/professor/login:
  *   post:
- *     summary: Cria um novo usuário
- *     tags: [Users]
+ *     summary: Autenticação de Professores
+ *     tags: [Teacher]
  *     requestBody:
  *       required: true
  *       content:
@@ -172,12 +273,23 @@ export const searchPosts = async (
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               username:
  *                 type: string
- *                 example: User 2
+ *                 example: Tiago
+ *               password:
+ *                 type: string
+ *                 example: 1234567
  *     responses:
- *       201:
- *         description: Usuário criado com sucesso
+ *       200:
+ *         description: Retorna token de autenticação
+ *         content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                token:
+ *                  type: string
+ *                  description: token(Json Web Token)
  */
 export async function login(
     req: Request,
