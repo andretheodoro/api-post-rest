@@ -1,5 +1,5 @@
-import { IPost } from '../posts/post.interface'
 import { database } from '../../lib/pg/db'
+import { IPost } from '../posts/post.interface'
 import { ITeacher } from './teacher.interface'
 
 export const insertPost = async (post: IPost): Promise<void> => {
@@ -34,7 +34,7 @@ export const findLastPost = async (): Promise<number | null> => {
         const result = await database.clientInstance?.query(
             'SELECT max(id) AS maxid FROM posts',
         )
-        const maxId = result.rows[0].maxid
+        const maxId = result?.rows[0].maxid
 
         return maxId !== null ? maxId : null // Retorna o maxId ou null se não houver posts
     } catch (err) {
@@ -114,6 +114,8 @@ export const loginTeacher = async (
             'SELECT * FROM teacher  WHERE NAME = $1 and PASSWORD = $2',
             [login, password],
         )
+        // console.log('conexão', database.clientInstance)
+
         return result?.rows[0] || null
     } catch (err) {
         throw err

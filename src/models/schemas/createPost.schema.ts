@@ -14,12 +14,12 @@ export const createPostSchema = z.object({
     description: z.string().trim().min(10, {
         message: 'É obrigatório e deve conter no minimo 10 caractere',
     }),
-    creation: z
-        .string({ message: 'É obrigatória' }) // Começamos com string para validar e depois coercionar
-        .refine((value) => !isNaN(Date.parse(value)), {
-            message: 'É obrigatória e deve seguir o formato YYYY-MM-DD',
-        })
-        .transform((value) => new Date(value)), // Converte para Date
+    // creation: z
+    //     .string({ message: 'É obrigatória' }) // Começamos com string para validar e depois coercionar
+    //     .refine((value) => !isNaN(Date.parse(value)), {
+    //         message: 'É obrigatória e deve seguir o formato YYYY-MM-DD',
+    //     })
+    //     .transform((value) => new Date(value)), // Converte para Date
     idteacher: z.coerce.number({
         message: 'É obrigatório',
     }),

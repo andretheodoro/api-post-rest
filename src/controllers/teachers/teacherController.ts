@@ -33,7 +33,7 @@ export const createPost = async (
             title: validateCreatePost.title,
             author: validateCreatePost.author,
             description: validateCreatePost.description,
-            creation: validateCreatePost.creation,
+            creation: new Date(),
             idteacher: validateCreatePost.idteacher,
         }
         await insertPost(postData)
@@ -54,8 +54,9 @@ export const getPostByIdTeacher = async (
         const validateGetByIdTeacher = getPostByIdTeacherSchema.parse(
             req.params,
         )
-        console.log(validateGetByIdTeacher)
+        // console.log(validateGetByIdTeacher)
         const post = await findPostByIdTeacher(validateGetByIdTeacher.id)
+        // console.log(post)
 
         if (post.length == 0) {
             res.status(404).json({
@@ -187,7 +188,7 @@ export async function login(
         // Schema de validação usando Zod
         const { username, password } = loginTeacherSchema.parse(req.body)
         const teacher = await loginTeacher(username, password)
-
+        // console.log('controller: ', teacher)
         // const doestPasswordMatch = await compare(password, teacher.password)
         if (teacher === null) {
             return next(new InvalidCredentialsError())
