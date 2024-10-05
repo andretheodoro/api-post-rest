@@ -3,11 +3,13 @@ import app from '../src/app'
 import dotenv from 'dotenv'
 import { database } from '../src/lib/pg/db'
 import { env } from '../src/env'
+import { IPost } from '../src/models/posts/post.interface'
+import { describe, it, expect } from '@jest/globals'
 
 dotenv.config()
-console.log('env.NODE_ENV:', env.NODE_ENV)
+console.log('env.NODE_ENV_TEST:', env.NODE_ENV_TEST)
 
-if (env.NODE_ENV == 'development') {
+if (env.NODE_ENV_TEST === 'development' || env.NODE_ENV_TEST === 'production') {
     beforeAll(async () => {
         await database.connection() // Chama o método connect
     })
@@ -233,12 +235,56 @@ if (env.NODE_ENV == 'development') {
     // afterAll(async () => {
     //     await database.disconnect() // Libera a conexão após os testes
     // })
-} else {
-    if (env.NODE_ENV == 'test') {
-        describe('Env Test git action', () => {
-            it('Deverá excluir um post existente', () => {
-                return
-            })
-        })
+} else if (
+    env.NODE_ENV_TEST === 'test' ||
+    env.NODE_ENV_TEST === 'github-actions'
+) {
+    const postsMock: IPost[] = [
+        {
+            id: 2,
+            title: 'Meu Primeiro Post',
+            author: 'Tiago',
+            description: 'Meu Primeiro Post',
+            creation: new Date('2024-09-22'),
+            update_date: null,
+            idteacher: 1,
+        },
+        {
+            id: 3,
+            title: 'alterado post 3',
+            author: 'Tiago',
+            description: 'Meu Primfasdfadfasfs',
+            creation: new Date('2024-09-22'),
+            update_date: new Date('2024-09-30T03:00:00.000Z'),
+            idteacher: 1,
+        },
+        {
+            id: 44,
+            title: 'Post teste de projetos',
+            author: 'Tiago',
+            description: 'Lorem teste,Lorem ipsum,Lorem ipsum,Lorem ipsum',
+            creation: new Date('2024-10-03'),
+            update_date: null,
+            idteacher: 1,
+        },
+    ]
+
+    const getPostById = (id: number): IPost | undefined => {
+        return postsMock.find((post) => post.id === id)
     }
+
+    /// Testes Mock para executar no Git Actions = > Pois não teremos como executar os testes de bando emd dados
+    describe('Testes Mock Post', () => {
+        it('deve retornar o usuário correto com base no ID', () => {
+            const post = getPostById(2)
+
+            const primeiroPostMock = postsMock[0]
+            expect(post).toEqual(primeiroPostMock)
+        })
+
+        it('deve retornar undefined para um ID que não existe', () => {
+            const post = getPostById(999)
+            expect(post).toBeUndefined()
+        })
+    })
 }

@@ -12,41 +12,17 @@ jobs:
         env:
             DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
             DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-            # DB_HOST: ${{ secrets.DB_HOST }}
-            # DB_USER: ${{ secrets.DB_USER }}
-            # DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-            # DB_NAME: ${{ secrets.DB_NAME }}
-            # DB_PORT: ${{ secrets.DB_PORT }}
             JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
-        # services:
-        #     postgres:
-        #         image: postgres:13
-        #         env:
-        #             POSTGRES_DB: $DB_NAME
-        #             POSTGRES_USER: $DB_USER
-        #             POSTGRES_PASSWORD: $DB_PASSWORD
-        #         ports:
-        #             - $DB_PORT:$DB_PORT
         steps:
             - name: Checar o repositório
               uses: actions/checkout@v4
-              with:
-                  ref: develop
-
-            # - name: Login to Docker Hub
-            #   run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-            # - name: Build Docker image
-            #   run: |
-            #       docker buildx build --platform linux/amd64 -t ${{ secrets.DOCKER_USERNAME }}/posts-api:latest --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} .
 
             - name: Configurar o Docker
               run: |
                   docker login -u $DOCKER_USERNAME --password $DOCKER_PASSWORD
                   docker build -t $DOCKER_USERNAME/posts-api:latest --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} .
                   docker push $DOCKER_USERNAME/posts-api:latest
-
             - name: Set up Node.js
               uses: actions/setup-node@v4
               with:
@@ -59,51 +35,39 @@ jobs:
               run: |
                   echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
                   echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> $GITHUB_ENV
+                  echo "NODE_ENV_TEST=${{ secrets.NODE_ENV_TEST }}" >> $GITHUB_ENV
                   echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
                   echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
                   echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
                   echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
                   echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
                   echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
-
             - name: Run tests
               run: npm test # ou o comando que você usa para rodar os testes
 
-    commit-to-main:
+    create-pull-request:
         runs-on: ubuntu-latest
         needs: build-and-test
         if: success()
 
         steps:
             - name: Checkout do repositório
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0 # Garante que todas as branches sejam buscadas
+              uses: actions/checkout@v2
 
             - name: Configurar Git
               run: |
                   git config --global user.name 'github-actions'
                   git config --global user.email '${{ secrets.EMAIL_PULLREQUEST }}'
-
-            # - name: Comitar mudanças
-            #   run: |
-            #       git add .
-            #       git commit -m "Atualizações após testes bem-sucedidos"
-            #       git push origin main
-
-            # - name: Comitar mudanças se houver
-            #   run: |
-            #       git add .
-            #       if [ -n "$(git status --porcelain)" ]; then
-            #         git commit -m "Atualizações após testes bem-sucedidos"
-            #         git push origin main
-            #       else
-            #         echo "Nada para commit, trabalhando tree está limpa."
-            #       fi
-            - name: Comitar e fazer merge para main
+            - name: Criar Pull Request
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }} # Usar o PAT para push
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                  git checkout main
-                  git merge develop
-                  git push https://${{ secrets.GITHUB_TOKEN }}:x-oauth-basic@github.com/${{ github.repository }} main
+                  curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
+                  -H "Accept: application/vnd.github.v3+json" \
+                  https://api.github.com/repos/${{ github.repository }}/pulls \
+                  -d '{
+                    "title": "Merge de develop para main",
+                    "head": "develop",
+                    "base": "main",
+                    "body": "Pull request gerado automaticamente após os testes passarem."
+                  }'

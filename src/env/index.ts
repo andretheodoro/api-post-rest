@@ -5,6 +5,9 @@ const envSchema = z.object({
     NODE_ENV: z
         .enum(['development', 'production', 'test'])
         .default('development'),
+    NODE_ENV_TEST: z
+        .enum(['development', 'production', 'test', 'github-actions'])
+        .default('test'),
     PORT: z.coerce.number().default(3000),
     DB_USER: z.string(),
     DB_HOST: z.string(),
