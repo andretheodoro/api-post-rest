@@ -122,6 +122,8 @@ Abaixo segue descrito os principais diretórios e arquivos do projeto da API des
 
 ```plaintext
 /api-post-rest
+├── /.github
+│   ├── /workflows        # Arquivos de configuração dos workflows do GitHub Actions. Esses arquivos, no formato YAML, definem as automações do ciclo de vida de desenvolvimento (CI/CD)
 ├── /src
 │   ├── /controllers      # Lógica para manipulação de dados
 │   ├── /env              # Ponto de carregamento das variáveis definidas em .env
@@ -499,6 +501,14 @@ Variáveis a serem configuradas no ambiente do Github:
 - **PORT**: A porta na qual o servidor da API será executado. Por exemplo, 3000 se a aplicação estiver rodando localmente.
 
 Essas variáveis são fundamentais para configurar o ambiente de execução da aplicação e garantir que o CI/CD funcione corretamente no GitHub.
+
+A API possui o diretório .github/workflows com o arquivo main.yml que através do workflow do GitHub Actions servirá para configurar o processo de integração contínua (CI/CD).
+Nesse arquivo foi configurado a branch "develop" para que realize os processos do workflow de CI/CD (Integração Contínua e Entrega Contínua), automatizando o processo de desenvolvimento, teste e implantação de software. Ele serve para garantir que o código seja integrado regularmente, testado automaticamente, e, em seguida, implantado de forma contínua ou quando uma nova versão estiver pronta, reduzindo o risco de erros e acelerando entregas. Resumidamente, o workflow de CI/CD ajuda a automatizar a entrega de software com mais qualidade, eficiência e rapidez.
+
+Etapas de execução das "Actions" configuradas e executadas com sucesso:
+![image](https://github.com/user-attachments/assets/67fbab90-e185-4d12-b248-3dae7c82c1a4)
+![image](https://github.com/user-attachments/assets/ab61f0e3-19e5-461a-9dbf-c74d27643f8d)
+![image](https://github.com/user-attachments/assets/b0b140c7-e975-4f46-b78e-a378901032f1)
 
 ## Validação de Campos com Zod
 
