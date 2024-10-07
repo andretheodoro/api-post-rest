@@ -3,7 +3,7 @@ export interface IPost {
     title: string
     author: string
     description: string
-    creation: Date
+    creation?: Date | null
     update_date?: Date | null
     idteacher: number
 }
