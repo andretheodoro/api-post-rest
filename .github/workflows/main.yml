@@ -23,15 +23,15 @@ jobs:
                   docker login -u $DOCKER_USERNAME --password $DOCKER_PASSWORD
                   docker build -t $DOCKER_USERNAME/posts-api:latest --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} .
                   docker push $DOCKER_USERNAME/posts-api:latest
-            - name: Set up Node.js
+            - name: Configurar Node.js
               uses: actions/setup-node@v4
               with:
                   node-version: '20' # ou a versão que você está usando
 
-            - name: Install dependencies
+            - name: Instalar Dependências
               run: npm install # ou o comando correspondente ao seu gerenciador de pacotes
 
-            - name: Set environment variables
+            - name: Definir Variáveis de Ambiente
               run: |
                   echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
                   echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> $GITHUB_ENV
@@ -42,7 +42,7 @@ jobs:
                   echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
                   echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
                   echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
-            - name: Run tests
+            - name: Executar Testes
               run: npm test # ou o comando que você usa para rodar os testes
 
     create-pull-request:
