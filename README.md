@@ -464,8 +464,10 @@ Para rodar os testes unitários, execute o seguinte comando:
 
 O Jest é utilizado para testes unitários. Cada método da API (criação, listagem, obtenção, atualização, exclusão) possuem testes correspondentes que simulam o comportamento da API.
 
+Execução de testes em ambiente local:
+
 ![image](https://github.com/user-attachments/assets/6197085f-f458-4923-b82d-365710442415)
-![image](https://github.com/user-attachments/assets/fbab5ca7-ff29-45f6-b25d-234eee6390d3)
+![image](https://github.com/user-attachments/assets/cb292964-eb12-463c-97e7-e6aeffc6fd70)
 
 **CI/CD**
 O workflow de CI/CD (Continuous Integration/Continuous Deployment) utilizado na API de Posts automatiza o processo de integração e implantação da aplicação, garantindo que cada mudança no código seja testada, validada e implantada de maneira consistente e eficiente.
