@@ -210,10 +210,10 @@ CREATE TABLE POSTS (
     FOREIGN KEY (IDTEACHER) REFERENCES TEACHER(ID)
 );
 
---Caso Migration não seja executada, será necessário efetuar o seguinte comando no BD:
+--Caso Migration não seja executado, será necessário efetuar o seguinte comando no BD para criação da coluna "PASSWORD":
 alter table teacher add column password varchar(50);
 
---Script's para criação de alguns usuários Professores no sistema
+--Script's para criação de alguns usuários Professores na API
 INSERT INTO TEACHER(NAME, PASSWORD) VALUES ('Andre', '12345');
 INSERT INTO TEACHER(NAME, PASSWORD) VALUES ('Tiago', '123456');
 INSERT INTO TEACHER(NAME, PASSWORD) VALUES ('FIAP', '123456');
