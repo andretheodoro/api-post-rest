@@ -15,7 +15,7 @@ jobs:
             JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
         steps:
-            - name: Checar o repositório
+            - name: Checar o Repositório
               uses: actions/checkout@v4
 
             - name: Configurar o Docker
