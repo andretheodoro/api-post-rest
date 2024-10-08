@@ -1,18 +1,17 @@
 # API REST de Gerenciamento de Posts
 
-Esta é uma API REST para gerenciamento de Posts tanto pela parte dos alunos como dos professores utilizando a plataforma de desenvolvimento Node.js.
+Esta API REST permite o gerenciamento de posts, oferecendo funcionalidades para alunos e professores. Desenvolvida com Node.js, ela facilita a criação, leitura, visualização, atualização e exclusão de posts de forma eficiente e centralizada.
 
 ## Descrição
 
-Atualmente, a maioria dos professores e professoras da rede pública de educação não têm plataformas onde postar suas aulas e transmitir conhecimento para alunos e alunas de forma prática, centralizada e tecnológica. 
-Para solucionar esse problema, nós utilizamos os conhecimentos adquiridos na última fase para auxiliar a nossa comunidade com a criação de uma aplicação de blogging dinâmico, utilizando a plataforma OutSystems. A plataforma foi um sucesso e, agora, nossa aplicação escalará para um panorama 
-nacional. Portanto, precisaremos refatorar nosso Back-end, utilizando a plataforma de desenvolvimento node.js, e precisaremos persistir esses dados em um banco de dados.
+Atualmente, a maioria dos professores e professoras da rede pública de educação não possuem plataformas onde postar suas aulas e transmitir conhecimento para alunos e alunas de forma prática, centralizada e tecnológica. 
+Para solucionar esse problema, nós utilizamos os conhecimentos adquiridos na última fase para auxiliar a nossa comunidade com a criação de uma aplicação de blogging dinâmico, utilizando a plataforma OutSystems. A plataforma foi um sucesso e, agora, nossa aplicação escalará para um panorama nacional. Portanto, precisaremos refatorar nosso Back-end, utilizando a plataforma de desenvolvimento node.js, e precisaremos persistir esses dados em um banco de dados.
 Com o objetivo de resolver o problema acima proposto desenvolvemos uma API simples para que professores possam criar, listar, atualizar e excluir posts e alunos possam visualizar e ler esses posts. Desenvolvida com Node.js, Express, PostgreSQL, Jest e Docker, esta API é automatizada com GitHub Actions para CI/CD.
 
 ## Arquitetura da Aplicação
 
 A aplicação é estruturada de forma modular, com rotas dedicadas para gerenciar posts utilizando o framework Express, middleware para validação da autenticação de usuários, gerenciamento de erros e garantindo a persistência de dados através do banco relacional PostgreSQL.
-Além disso, a API conta com a utilização de contêiners Docker para garantis a consistência entre ambientes de desenvolvimento e produção.
+Além disso, a API conta com a utilização de contêiners Docker para garantir a consistência entre ambientes de desenvolvimento e produção.
 
 A aplicação em sua essência é estruturada da seguinte forma:
 
@@ -23,19 +22,20 @@ A aplicação em sua essência é estruturada da seguinte forma:
 - **middleware/**: Middleware para validação e autenticação.
 - **models/**: Modelos que representam a estrutura dos dados e interagem com o banco de dados.
 - **routes/**: Definições das rotas da API.
-- **tests/**: Testes automatizados usando Jest.
+- **tests/**: Testes automatizados usando Jest/Supertest.
 
 ## Tecnologias/Framework Utilizadas
 
 - **Node.js**: Ambiente de execução para JavaScript no servidor (Vide abaixo pré-requisito).
 - **PostgreSQL**: Banco de dados relacional utilizado para armazenar os dados dos posts e professores (Vide abaixo pré-requisito).
-- [**Express**](https://expressjs.com/): Framework para construir a API REST.
+- [**Express**](https://expressjs.com/): Framework para gerenciamento de rotas na API REST.
 - [**Docker**](https://docs.docker.com/): Containerização da aplicação para facilitar o desenvolvimento e a implantação.
 - [**Jest**](https://jestjs.io/docs/getting-started): Framework de testes para garantir a qualidade do código.
 - [**ZOD**](https://zod.dev/): Biblioteca de validação de esquemas em TypeScript, usada para garantir que os dados de entrada (ex.: parâmetros de requisição) estejam no formato correto, validando tipos, estruturas e restrições antes de processá-los.
 - [**Typeorm**](https://typeorm.io/): ORM (Object-Relational Mapping) para TypeScript e JavaScript, que facilita a interação com bancos de dados relacionais, permitindo mapear entidades diretamente para tabelas, realizar consultas, e gerenciar dados de forma mais simples e orientada a objetos.
 - [**Swagger**](https://swagger.io/docs/): Ferramenta que facilita a documentação e visualização interativa da API, permitindo testes nos endpoints diretamente pela interface, além de gerar especificações em formato OpenAPI.
 - [**JWT**](https://jwt.io/introduction): JSON Web Token é um padrão para autenticação segura na API. Ele cria tokens compactos e assinados.
+- [**Postman**](https://www.postman.com/): Ferramenta usada para testar e documentar a API, permitindo enviar requisições HTTP, verificando respostas e facilitando o desenvolvimento e a depuração da API.
   
 ## Setup Inicial
 
@@ -179,7 +179,7 @@ Optamos pelo PostgreSQL como banco de dados relacional para a API, pois teremos 
 
 - **Estrutura de Dados Definida:** Com um esquema rígido, o PostgreSQL garante que os dados dos posts e dos usuários sejam consistentes e bem organizados. Isso é crucial para manter a integridade das informações, especialmente quando diferentes usuários interagem com a mesma base.
 
-- **Relacionamentos Eficientes:** A API pode precisar gerenciar relacionamentos entre posts, autores e outras entidades. O PostgreSQL permite a utilização de chaves estrangeiras, facilitando a modelagem dessas interações e garantindo que os dados permaneçam integrados.
+- **Relacionamentos Eficientes:** A API pode precisar gerenciar relacionamentos entre posts, autores (alunos e professores) e futuramente outras entidades. O PostgreSQL permite a utilização de chaves estrangeiras, facilitando a modelagem dessas interações e garantindo que os dados permaneçam integrados.
 
 - **Consultas Complexas:** O uso de SQL no PostgreSQL possibilita consultas avançadas, permitindo filtrar e buscar posts de maneira eficiente. Isso é especialmente útil para funcionalidades como pesquisa por palavras-chave ou listagem de posts por autor.
 
@@ -195,7 +195,6 @@ O script para criar as tabelas no banco de dados é o seguinte:
 CREATE TABLE TEACHER (
     ID SERIAL,
     NAME VARCHAR(100),
-    PASSWORD VARCHAR(50),
     PRIMARY KEY (ID)
 );
 
@@ -211,6 +210,10 @@ CREATE TABLE POSTS (
     FOREIGN KEY (IDTEACHER) REFERENCES TEACHER(ID)
 );
 
+--Caso Migration não seja executada, será necessário efetuar o seguinte comando no BD:
+alter table teacher add column password varchar(50);
+
+--Script's para criação de alguns usuários Professores no sistema
 INSERT INTO TEACHER(NAME, PASSWORD) VALUES ('Andre', '12345');
 INSERT INTO TEACHER(NAME, PASSWORD) VALUES ('Tiago', '123456');
 INSERT INTO TEACHER(NAME, PASSWORD) VALUES ('FIAP', '123456');
@@ -228,7 +231,7 @@ INSERT INTO TEACHER(NAME, PASSWORD) VALUES ('TECH CHALLENGE', '123456');
  - **Criação de Posts**
  - **Atualização de um Post**
  - **Exclusão de um Post**
- - **Listagem de todos os Posts criados pelo professor**
+ - **Listagem de todos os Posts criados pelo Professor**
  - **Busca de Posts por Palavras-Chave**
 
 ## Endpoints da API
@@ -251,7 +254,7 @@ INSERT INTO TEACHER(NAME, PASSWORD) VALUES ('TECH CHALLENGE', '123456');
 Para os métodos de acesso exclusivo dos professores é necessário enviar como Header o Authorization Bearer gerado no método de login.
 Para isso é necessário primeiramente acionar o método de login informando o usuário/senha do professor desejado e posteriormente acionar o método desejado, passando como Header o Bearer Token retornado no método de login.
 
-Exemplo de Header nos métodos que requerem o Authorization Token de Professor através do Postman:
+Exemplo de Header nos métodos que requerem o Authorization Bearer Token de Professor através do Postman:
 ![image](https://github.com/user-attachments/assets/8b9d111c-a366-4b35-acfe-670f648ef9a5)
 
 ### Criar Post
@@ -358,11 +361,11 @@ Exemplo de requisição via Postman:
 
 Você pode usar o seguinte parâmetro de consulta para refinar sua busca:
 
-- **`keyword`** (opcional): Filtra os posts pelo título ou conteúdo.
+- **`keyword`**: Filtra os posts pelo título ou conteúdo.
 
 ### Exemplo de Requisição
 
-Para buscar posts que contêm o título "Node.js", você pode fazer uma requisição da seguinte forma:
+Para buscar posts que contêm o título "software", você pode fazer uma requisição da seguinte forma:
 
 ```http
 GET /api/posts/search?title=software HTTP/1.1
@@ -412,7 +415,7 @@ Nesse projeto, o Jest está configurado no ambiente de desenvolvimento (devDepen
 O Jest permite escrever testes de unidade e de integração para a API de Posts. Cada teste pode verificar o comportamento de uma parte específica da aplicação, no caso desenvolvido irá ser aplicado como Testes de Unidade: 
 - Testes de Unidade: Testam funções ou métodos isolados, como a validação dos dados de entrada.
 
-**3. Benefícios de Usar o Jest**
+**3. Benefícios de Usar o Jest/Supertest**
 
 - Detecção de Erros: Testes automatizados ajudam a detectar erros no código antes de chegar à produção.
 - Confiança nas Alterações: Como os testes são automatizados, você pode fazer alterações na API e rodar os testes para garantir que nada foi quebrado.
@@ -450,7 +453,8 @@ DB_HOST=localhost
 DB_NAME=nome_do_banco
 DB_PORT=5432 -> porta Banco de Dados
 PORT=3000 -> porta Aplicação
-NODE_ENV=test
+NODE_ENV=development -> Executa testes com conexão ao banco de dados, para não conectar com o BD informar "test"
+NODE_ENV_TEST=development -> Executa testes com conexão ao banco de dados, para testes em mock informar "test"
 ```
 
 Para rodar os testes unitários, execute o seguinte comando:
@@ -460,6 +464,9 @@ Para rodar os testes unitários, execute o seguinte comando:
 
 O Jest é utilizado para testes unitários. Cada método da API (criação, listagem, obtenção, atualização, exclusão) possuem testes correspondentes que simulam o comportamento da API.
 
+![image](https://github.com/user-attachments/assets/6197085f-f458-4923-b82d-365710442415)
+![image](https://github.com/user-attachments/assets/fbab5ca7-ff29-45f6-b25d-234eee6390d3)
+
 **CI/CD**
 O workflow de CI/CD (Continuous Integration/Continuous Deployment) utilizado na API de Posts automatiza o processo de integração e implantação da aplicação, garantindo que cada mudança no código seja testada, validada e implantada de maneira consistente e eficiente.
 
@@ -467,7 +474,7 @@ Principais Funcionalidades:
 
 - **Integração Contínua (CI):**
 Cada vez que uma nova alteração é enviada para o repositório (por exemplo, por meio de um pull request ou push), o workflow executa automaticamente uma série de verificações e testes.
-Essas verificações incluem a execução de testes unitários com Jest em Mock, validação de código com ferramentas como ESLint, e a verificação de que a aplicação pode ser construída sem erros.
+Essas verificações incluem a execução de testes unitários com Jest via conexão ao BD e em Mock, e a verificação de que a aplicação pode ser construída sem erros.
 
 - **Deployment Automatizado (CD):**
 Após a execução bem-sucedida dos testes, o workflow utiliza Docker para criar uma imagem da aplicação e fazer o push para o Docker Hub, utilizando as credenciais (DOCKER_USERNAME e DOCKER_PASSWORD).
@@ -503,7 +510,7 @@ Variáveis a serem configuradas no ambiente do Github:
 Essas variáveis são fundamentais para configurar o ambiente de execução da aplicação e garantir que o CI/CD funcione corretamente no GitHub.
 
 A API possui o diretório .github/workflows com o arquivo main.yml que através do workflow do GitHub Actions servirá para configurar o processo de integração contínua (CI/CD).
-Nesse arquivo foi configurado a branch "develop" para que realize os processos do workflow de CI/CD (Integração Contínua e Entrega Contínua), automatizando o processo de desenvolvimento, teste e implantação de software. Ele serve para garantir que o código seja integrado regularmente, testado automaticamente, e, em seguida, implantado de forma contínua ou quando uma nova versão estiver pronta, reduzindo o risco de erros e acelerando entregas. Resumidamente, o workflow de CI/CD ajuda a automatizar a entrega de software com mais qualidade, eficiência e rapidez.
+Nesse arquivo foi configurado para que a branch "develop" realize os processos do workflow de CI/CD (Integração Contínua e Entrega Contínua), automatizando o processo de desenvolvimento, teste e implantação de software. Ele serve para garantir que o código seja integrado regularmente, testado automaticamente, e, em seguida, implantado de forma contínua ou quando uma nova versão estiver pronta, reduzindo o risco de erros e acelerando entregas. Resumidamente, o workflow de CI/CD ajuda a automatizar a entrega de software com mais qualidade, eficiência e rapidez.
 
 Etapas de execução das "Actions" configuradas e executadas com sucesso:
 ![image](https://github.com/user-attachments/assets/67fbab90-e185-4d12-b248-3dae7c82c1a4)
@@ -530,7 +537,7 @@ Com a implementação do Swagger, a API de Posts se torna mais acessível e fác
 
 As principais funções do Swagger na API incluem:
 
-- **Documentação Automática:** O Swagger gera documentação em tempo real a partir das definições da API, garantindo que os desenvolvedores tenham acesso a informações atualizadas sobre os endpoints, parâmetros e respostas.
+- **Documentação:** O Swagger gera documentação a partir das definições da API, garantindo que os desenvolvedores tenham acesso a informações atualizadas sobre os endpoints, parâmetros e respostas.
 - **Interface Interativa:** A interface do Swagger permite que os usuários testem os endpoints diretamente do navegador, enviando requisições e visualizando as respostas, o que facilita a compreensão de como a API funciona.
 - **Padronização:** Ao seguir o padrão OpenAPI, o Swagger ajuda a manter a consistência na documentação da API, tornando mais fácil para novos desenvolvedores entenderem como interagir com ela.
 - **Facilidade de Integração:** A documentação gerada pode ser utilizada por ferramentas de automação e outros serviços, facilitando a integração com outras aplicações e sistemas.
