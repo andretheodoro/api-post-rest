@@ -34,6 +34,7 @@ export const createPost = async (
             author: validateCreatePost.author,
             description: validateCreatePost.description,
             creation: new Date(),
+            update_date: new Date(),
             idteacher: validateCreatePost.idteacher,
         }
         await insertPost(postData)

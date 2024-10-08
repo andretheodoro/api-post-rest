@@ -20,7 +20,7 @@ if (env.NODE_ENV_TEST === 'development' || env.NODE_ENV_TEST === 'production') {
     describe('POST /api/professor/login', () => {
         it('Deverá retorar o token de autenticação', async () => {
             const login = {
-                username: 'Tiago',
+                username: 'FIAP',
                 password: '123456',
             }
 
@@ -40,7 +40,7 @@ if (env.NODE_ENV_TEST === 'development' || env.NODE_ENV_TEST === 'production') {
         author: expect.any(String),
         description: expect.any(String),
         creation: expect.any(String),
-        update_date: null,
+        update_date: expect.any(String),
         idteacher: expect.any(Number),
     }
 
@@ -174,6 +174,39 @@ if (env.NODE_ENV_TEST === 'development' || env.NODE_ENV_TEST === 'production') {
         })
     })
 
+    //GET /posts/search - Busca de Posts por Palavras-Chaves:
+    describe('GET /api/posts/search', () => {
+        it('deve retornar 400 se a palavra chave não for fornecida', async () => {
+            const response = await request(app)
+                .get('/api/posts/search')
+                .set('Authorization', `${token}`)
+            expect(response.status).toBe(400)
+            expect(response.body).toEqual({
+                message: 'Palavra chave é obrigatória',
+            })
+        })
+
+        it('deve retornar 404 se não encontrar posts', async () => {
+            const response = await request(app)
+                .get('/api/posts/search?keyword=keyword')
+                .set('Authorization', `${token}`) // ajuste conforme a lógica do seu banco
+            expect(response.status).toBe(404)
+            expect(response.body).toEqual({
+                message:
+                    'Nenhum Post encontrado para a palavra chave informada.',
+            })
+        })
+
+        it('deve retornar 200 e os posts encontrados', async () => {
+            const expectedPosts = [postModel]
+            const response = await request(app)
+                .get('/api/posts/search?keyword=Node')
+                .set('Authorization', `${token}`) // substitua pelo valor correto
+            expect(response.status).toBe(200)
+            expect(response.body).toEqual(expect.arrayContaining(expectedPosts))
+        })
+    })
+
     //DELETE /posts/:id - Exclusão de Postagens:
     describe('DELETE /api/posts/:id', () => {
         it('Deverá excluir um post existente', async () => {
@@ -196,39 +229,6 @@ if (env.NODE_ENV_TEST === 'development' || env.NODE_ENV_TEST === 'production') {
 
             expect(response.status).toBe(404)
             expect(response.body).toEqual({ message: 'Post não encontrado' })
-        })
-    })
-
-    //GET /posts/search - Busca de Posts por Palavras-Chaves:
-    describe('GET /api/posts/search', () => {
-        it('deve retornar 400 se a palavra chave não for fornecida', async () => {
-            const response = await request(app)
-                .get('/api/posts/search')
-                .set('Authorization', `${token}`)
-            expect(response.status).toBe(400)
-            expect(response.body).toEqual({
-                message: 'Palavra chave é obrigatória',
-            })
-        })
-
-        it('deve retornar 404 se não encontrar posts', async () => {
-            const response = await request(app)
-                .get('/api/posts/search?keyword=jest')
-                .set('Authorization', `${token}`) // ajuste conforme a lógica do seu banco
-            expect(response.status).toBe(404)
-            expect(response.body).toEqual({
-                message:
-                    'Nenhum Post encontrado para a palavra chave informada.',
-            })
-        })
-
-        it('deve retornar 200 e os posts encontrados', async () => {
-            const expectedPosts = [postModel]
-            const response = await request(app)
-                .get('/api/posts/search?keyword=teste')
-                .set('Authorization', `${token}`) // substitua pelo valor correto
-            expect(response.status).toBe(200)
-            expect(response.body).toEqual(expect.arrayContaining(expectedPosts))
         })
     })
 
