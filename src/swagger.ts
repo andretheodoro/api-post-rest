@@ -6,9 +6,11 @@ const swaggerOptions = {
     swaggerDefinition: {
         openapi: '3.0.0',
         info: {
-            title: 'API Example',
+            title: 'API Fiap - Techchallenge (Posts)',
             version: '1.0.0',
-            description: 'Documentação da API usando Swagger',
+            description: `Documentação da API usando Swagger
+            \r\nEsta API REST permite o gerenciamento de posts, oferecendo funcionalidades para alunos e professores.
+            \r\nDesenvolvida com Node.js, ela facilita a criação, leitura, visualização, atualização e exclusão de posts de forma eficiente e centralizada.`,
         },
         servers: [
             {
@@ -16,11 +18,14 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ['./src/controllers/teachers/*.ts'], // Caminho para os controllers
+    apis: [
+        './src/controllers/teachers/*.ts',
+        './src/controllers/students/*.ts',
+    ], // Caminho para os controllers
 }
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions)
 
 export default (app: Express) => {
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
+    app.use('/api-posts', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 }

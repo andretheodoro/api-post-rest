@@ -20,7 +20,7 @@ export const insertPost = async (post: IPost): Promise<void> => {
 export const findPostByIdTeacher = async (id: number): Promise<IPost[]> => {
     try {
         const result = await database.clientInstance?.query(
-            `SELECT id, title, author, description, to_char(CREATION, 'YYYY-MM-DD') creation, update_date, idteacher FROM posts WHERE idteacher = $1`,
+            `SELECT id, title, author, description, to_char(CREATION, 'YYYY-MM-DD') creation,  to_char(update_date, 'YYYY-MM-DD') update_date, idteacher FROM posts WHERE idteacher = $1`,
             [id],
         )
         return result?.rows || []
@@ -93,7 +93,7 @@ export const searchPostsByKeyword = async (keyword: string) => {
     try {
         const searchTerm = `%${keyword}%` // Adicionar '%' para busca com LIKE
         const result = await database.clientInstance?.query(
-            `SELECT id, title, author, description, to_char(CREATION, 'YYYY-MM-DD') creation, update_date, idteacher 
+            `SELECT id, title, author, description, to_char(CREATION, 'YYYY-MM-DD') creation, to_char(update_date, 'YYYY-MM-DD') update_date, idteacher 
        FROM posts 
        WHERE title ILIKE $1 OR description ILIKE $1`,
             [searchTerm],
