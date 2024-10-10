@@ -545,7 +545,9 @@ As principais funções do Swagger na API incluem:
 - **Facilidade de Integração:** A documentação gerada pode ser utilizada por ferramentas de automação e outros serviços, facilitando a integração com outras aplicações e sistemas.
 - **Aprimoramento da Comunicação:** O Swagger serve como uma forma clara de comunicação entre a equipe de desenvolvimento e os usuários da API, permitindo que todos tenham um entendimento comum sobre as funcionalidades e limitações da API.
 
-Para acessar o Swagger utilize a rota `/api-docs`, exemplo: `http://localhost:3000/api-docs`
+Para acessar o Swagger utilize a rota `/api-posts`, exemplo: `http://localhost:3000/api-posts`
+
+![image](https://github.com/user-attachments/assets/963fd8a2-3e8d-4904-985a-675be645cf58)
 
 Exemplo da utilização do Swagger no método de Busca Post por Keyword (/api/posts/search), com retorno 200 e o Post corresponde a palavra que efetuou busca "node":
 
