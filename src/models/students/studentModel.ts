@@ -4,7 +4,7 @@ import { database } from '../../lib/pg/db'
 export const getAllPosts = async (): Promise<IPost[]> => {
     try {
         const result = await database.clientInstance?.query(
-            `SELECT id, title, author, description, to_char(CREATION, 'YYYY-MM-DD') creation, update_date, idteacher FROM posts`,
+            `SELECT id, title, author, description, to_char(CREATION, 'YYYY-MM-DD') creation, to_char(update_date, 'YYYY-MM-DD') update_date, idteacher FROM posts`,
         )
         return result?.rows || []
     } catch (err) {
@@ -16,7 +16,7 @@ export const getAllPosts = async (): Promise<IPost[]> => {
 export const findPostById = async (id: number): Promise<IPost | null> => {
     try {
         const result = await database.clientInstance?.query(
-            `SELECT id, title, author, description, to_char(CREATION, 'YYYY-MM-DD') creation, update_date, idteacher FROM posts WHERE id = $1`,
+            `SELECT id, title, author, description, to_char(CREATION, 'YYYY-MM-DD') creation, to_char(update_date, 'YYYY-MM-DD') update_date, idteacher FROM posts WHERE id = $1`,
             [id],
         )
 

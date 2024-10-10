@@ -20,6 +20,83 @@ import { generateToken } from '../../middleware/authMiddleware'
 import { createPostSchema } from '../../models/schemas/createPost.schema'
 import { getPostByIdTeacherSchema } from '../../models/schemas/getPostByIdTeacher.schema'
 
+/**
+ * @swagger
+ * /api/posts:
+ *   post:
+ *     summary: Criar Posts
+ *     description: Cria um novo post
+ *     tags: [Teacher]
+ *     security:
+ *      - jwt: []  # Indica que este endpoint requer autenticação JWT
+ *
+ *     requestBody:
+ *      required: true
+ *      content:
+ *       application/json:
+ *         schema:
+ *           type: object
+ *           properties:
+ *             title:
+ *               type: string
+ *               example: Desenvolvimento de Software
+ *             author:
+ *               type: string
+ *               example: Tiago
+ *             description:
+ *               type: string
+ *               example: O desenvolvimento de software é o processo de criar, projetar, implementar, testar e manter programas e aplicativos
+ *             idteacher:
+ *               type: number
+ *               example: 1
+ *     responses:
+ *           200:
+ *             description: "Retorna o post criado"
+ *             content:
+ *              application/json:
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                    id:
+ *                      type: number
+ *                      example: 1
+ *                    title:
+ *                      type: string
+ *                      example: Desenvolvimento de Software
+ *                    author:
+ *                      type: string
+ *                      example: Tiago
+ *                    description:
+ *                      type: string
+ *                      example: O desenvolvimento de software é o processo de criar, projetar, implementar, testar e manter programas e aplicativos
+ *                    creation:
+ *                      type: string
+ *                      format: date
+ *                      example: 2024-01-01
+ *                    update_date:
+ *                      type: string
+ *                      format: date
+ *                      example: 2024-01-01
+ *                    idteacher:
+ *                      type: number
+ *                      example: 1
+ *
+ *           404:
+ *             content:
+ *              application/json:
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                      example: informação de campos obrigatórios.
+ * components:
+ *  securitySchemes:
+ *      jwt:
+ *          type: http
+ *          scheme: bearer
+ *          bearerFormat: JWT
+ */
 export const createPost = async (
     req: Request,
     res: Response,
@@ -45,6 +122,72 @@ export const createPost = async (
     }
 }
 
+/**
+ * @swagger
+ * /api/posts/professor/{id}:
+ *   get:
+ *     summary: Listar Posts do Professor
+ *     description: Buscar todos os posts do professor filtrando o ID
+ *     tags: [Teacher]
+ *     parameters:
+ *      - name: id
+ *        required: true
+ *        in: path
+ *        schema:
+ *          type: number
+ *     security:
+ *      - jwt: []  # Indica que este endpoint requer autenticação JWT
+ *
+ *     responses:
+ *           200:
+ *             description: "Retorna a lista de posts do professor"
+ *             content:
+ *              application/json:
+ *                schema:
+ *                  type: array
+ *                  items:
+ *                    type: object
+ *                    properties:
+ *                      id:
+ *                        type: number
+ *                        example: 1
+ *                      title:
+ *                        type: string
+ *                        example: Desenvolvimento de Software
+ *                      author:
+ *                        type: string
+ *                        example: Tiago
+ *                      description:
+ *                        type: string
+ *                        example: O desenvolvimento de software é o processo de criar, projetar, implementar, testar e manter programas e aplicativos
+ *                      creation:
+ *                        type: string
+ *                        format: date
+ *                        example: 2024-01-01
+ *                      update_date:
+ *                        type: string
+ *                        format: date
+ *                        example: 2024-01-01
+ *                      idteacher:
+ *                        type: number
+ *                        example: 1
+ *
+ *           404:
+ *             content:
+ *              application/json:
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                      example: Professor(a) não possui Posts criados.
+ * components:
+ *  securitySchemes:
+ *      jwt:
+ *          type: http
+ *          scheme: bearer
+ *          bearerFormat: JWT
+ */
 export const getPostByIdTeacher = async (
     req: Request,
     res: Response,
@@ -71,6 +214,90 @@ export const getPostByIdTeacher = async (
     }
 }
 
+/**
+ * @swagger
+ * /api/posts/{id}:
+ *   put:
+ *     summary: Atualizar Post
+ *     description: Atualizar o post pelo ID
+ *     tags: [Teacher]
+ *     parameters:
+ *      - name: id
+ *        required: true
+ *        in: path
+ *        schema:
+ *          type: number
+ *     security:
+ *      - jwt: []  # Indica que este endpoint requer autenticação JWT
+ *
+ *     requestBody:
+ *       required: true
+ *       content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              title:
+ *                type: string
+ *                example: Desenvolvimento de Software
+ *              author:
+ *                type: string
+ *                example: Tiago
+ *              description:
+ *                type: string
+ *                example: O desenvolvimento de software é o processo de criar, projetar, implementar, testar e manter programas e aplicativos
+ *              update_date:
+ *                type: string
+ *                format: date
+ *                example: 2024-01-01
+ *              idteacher:
+ *                type: number
+ *                example: 1
+ *
+ *     responses:
+ *           200:
+ *             content:
+ *              application/json:
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                    title:
+ *                      type: string
+ *                      example: Desenvolvimento de Software
+ *                    author:
+ *                      type: string
+ *                      example: Tiago
+ *                    description:
+ *                      type: string
+ *                      example: O desenvolvimento de software é o processo de criar, projetar, implementar, testar e manter programas e aplicativos
+ *                    creation:
+ *                      type: string
+ *                      format: date
+ *                      example: 2024-01-01
+ *                    update_date:
+ *                      type: string
+ *                      format: date
+ *                      example: 2024-01-01
+ *                    idteacher:
+ *                      type: number
+ *                      example: 1
+ *
+ *           404:
+ *             content:
+ *              application/json:
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                      example: Post não encontrado
+ * components:
+ *  securitySchemes:
+ *      jwt:
+ *          type: http
+ *          scheme: bearer
+ *          bearerFormat: JWT
+ */
 // Controlador para atualizar um post existente
 export const updatePost = async (
     req: Request,
@@ -209,7 +436,7 @@ export const deletePost = async (
  *                      format: date
  *                    update_date:
  *                      type: string
- *                      format: date-time
+ *                      format: date
  *                    idteacher:
  *                      type: number
  *
