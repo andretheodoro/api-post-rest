@@ -20,7 +20,7 @@ if (env.NODE_ENV_TEST === 'development' || env.NODE_ENV_TEST === 'production') {
     describe('POST /api/professor/login', () => {
         it('Deverá retorar o token de autenticação', async () => {
             const login = {
-                username: 'FIAP',
+                username: 'POS_FIAP',
                 password: '123456',
             }
 
@@ -45,6 +45,27 @@ if (env.NODE_ENV_TEST === 'development' || env.NODE_ENV_TEST === 'production') {
     }
 
     let lastIdPost = 0
+
+       //POST /posts - Criação de postagens:
+       describe('POST /api/posts', () => {
+        it('Deverá criar um novo post', async () => {
+            const insertPost = {
+                title: 'Introdução ao Node.js',
+                author: 'ANDRE/TIAGO',
+                description:
+                    'Node.js® é um ambiente de execução de JavaScript em nível de back-end e front-end. Neste tutorial, veremos uma breve introdução ao desenvolvimento de aplicações web usando Node.js. Requisitos básicos: node e npm. Para verificar se estão instalados, digite no terminal: node -v, npm -v. Você pode fazer o download do Node.js neste endereço: https://nodejs.org/pt-br/',
+                idteacher: 1,
+            }
+
+            const response = await request(app)
+                .post('/api/posts')
+                .send(insertPost)
+                .set('Authorization', `${token}`)
+
+            expect(response.status).toBe(201)
+            expect(response.body).toEqual(expect.objectContaining(insertPost))
+        })
+    })
 
     //GET /posts - Lista de Posts:
     describe('GET /api/posts', () => {
@@ -81,27 +102,6 @@ if (env.NODE_ENV_TEST === 'development' || env.NODE_ENV_TEST === 'production') {
             expect(response.body).toEqual({
                 message: 'Professor(a) não possui Posts criados.',
             })
-        })
-    })
-
-    //POST /posts - Criação de postagens:
-    describe('POST /api/posts', () => {
-        it('Deverá criar um novo post', async () => {
-            const insertPost = {
-                title: 'Introdução ao Node.js',
-                author: 'ANDRE/TIAGO',
-                description:
-                    'Node.js® é um ambiente de execução de JavaScript em nível de back-end e front-end. Neste tutorial, veremos uma breve introdução ao desenvolvimento de aplicações web usando Node.js. Requisitos básicos: node e npm. Para verificar se estão instalados, digite no terminal: node -v, npm -v. Você pode fazer o download do Node.js neste endereço: https://nodejs.org/pt-br/',
-                idteacher: 1,
-            }
-
-            const response = await request(app)
-                .post('/api/posts')
-                .send(insertPost)
-                .set('Authorization', `${token}`)
-
-            expect(response.status).toBe(201)
-            expect(response.body).toEqual(expect.objectContaining(insertPost))
         })
     })
 
