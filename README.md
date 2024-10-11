@@ -32,7 +32,7 @@ A aplicação em sua essência é estruturada da seguinte forma:
 - [**Docker**](https://docs.docker.com/): Containerização da aplicação para facilitar o desenvolvimento e a implantação.
 - [**Jest**](https://jestjs.io/docs/getting-started): Framework de testes para garantir a qualidade do código.
 - [**ZOD**](https://zod.dev/): Biblioteca de validação de esquemas em TypeScript, usada para garantir que os dados de entrada (ex.: parâmetros de requisição) estejam no formato correto, validando tipos, estruturas e restrições antes de processá-los.
-- [**Typeorm**](https://typeorm.io/): ORM (Object-Relational Mapping) para TypeScript e JavaScript, que facilita a interação com bancos de dados relacionais, permitindo mapear entidades diretamente para tabelas, realizar consultas, e gerenciar dados de forma mais simples e orientada a objetos.
+- [**Typeorm**](https://typeorm.io/): ORM (Object-Relational Mapping) para TypeScript e JavaScript, que facilita a interação com bancos de dados relacionais, permitindo mapear entidades diretamente para tabelas, realizar consultas, e gerenciar dados de forma mais simples e orientada a objetos. Migration é um recurso do typeorm, inicialmente não utilizamos a facilidade de ORM disponível.
 - [**Swagger**](https://swagger.io/docs/): Ferramenta que facilita a documentação e visualização interativa da API, permitindo testes nos endpoints diretamente pela interface, além de gerar especificações em formato OpenAPI.
 - [**JWT**](https://jwt.io/introduction): JSON Web Token é um padrão para autenticação segura na API. Ele cria tokens compactos e assinados.
 - [**Postman**](https://www.postman.com/): Ferramenta usada para testar e documentar a API, permitindo enviar requisições HTTP, verificando respostas e facilitando o desenvolvimento e a depuração da API.
@@ -257,6 +257,25 @@ Para isso é necessário primeiramente acionar o método de login informando o u
 Exemplo de Header nos métodos que requerem o Authorization Bearer Token de Professor através do Postman:
 ![image](https://github.com/user-attachments/assets/8b9d111c-a366-4b35-acfe-670f648ef9a5)
 
+### Login - Professor
+- Método: `POST`
+- URL: `/api/professor/login`
+- Request Body:
+
+```json
+{
+    "username": "Nome Professor(a)",
+    "password": "Senha Professor(a)"
+}
+```
+- Resposta:
+  - 200 OK: Retorna um Token gerado através do JWT.
+  - 400 Bad Request: Se os dados enviados para a API forem inválidos.
+  - 404 Not Found: Se Usuário ou Senha fornecidas forem inválidas.
+ 
+Exemplo de requisição via Postman:
+![image](https://github.com/user-attachments/assets/8b5e1eaf-51d2-48f2-9867-75ba58e507a0)
+
 ### Criar Post
 - Método: `POST`
 - URL: `/api/posts`
@@ -379,26 +398,6 @@ Host: localhost:3000
 
 Exemplo de requisição via Postman:
 ![image](https://github.com/user-attachments/assets/1cbbe44d-e188-4198-a172-c19c0ae9f4d1)
-
-### Login - Professor
-- Método: `POST`
-- URL: `/api/professor/login`
-- Request Body:
-
-```json
-{
-    "username": "Nome Professor(a)",
-    "password": "Senha Professor(a)"
-}
-```
-- Resposta:
-  - 200 OK: Retorna um Token gerado através do JWT.
-  - 400 Bad Request: Se os dados enviados para a API forem inválidos.
-  - 404 Not Found: Se Usuário ou Senha fornecidas forem inválidas.
- 
-Exemplo de requisição via Postman:
-![image](https://github.com/user-attachments/assets/8b5e1eaf-51d2-48f2-9867-75ba58e507a0)
-
     
 ## Testes
 
