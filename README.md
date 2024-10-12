@@ -211,13 +211,13 @@ CREATE TABLE POSTS (
 );
 
 --Caso Migration não seja executado, será necessário efetuar o seguinte comando no BD para criação da coluna "PASSWORD":
-alter table teacher add column password varchar(50);
+--alter table teacher add column password varchar(50);
 
 --Script's para criação de alguns usuários Professores na API
-INSERT INTO TEACHER(NAME, PASSWORD) VALUES ('Andre', '12345');
-INSERT INTO TEACHER(NAME, PASSWORD) VALUES ('Tiago', '123456');
-INSERT INTO TEACHER(NAME, PASSWORD) VALUES ('POS_FIAP', '123456');
-INSERT INTO TEACHER(NAME, PASSWORD) VALUES ('TECH CHALLENGE', '123456');
+INSERT INTO TEACHER(NAME) VALUES ('Andre');
+INSERT INTO TEACHER(NAME) VALUES ('Tiago');
+INSERT INTO TEACHER(NAME) VALUES ('POS_FIAP');
+INSERT INTO TEACHER(NAME) VALUES ('TECH CHALLENGE');
 ```
 
 ## Funcionalidades
