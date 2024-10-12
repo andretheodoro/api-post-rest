@@ -282,6 +282,7 @@ if (env.NODE_ENV_TEST === 'development' || env.NODE_ENV_TEST === 'production') {
             expect(post).toEqual(primeiroPostMock)
         })
 
+        // adicionado comentário para apresentação do gitactions
         it('deve retornar undefined para um ID que não existe', () => {
             const post = getPostById(999)
             expect(post).toBeUndefined()
