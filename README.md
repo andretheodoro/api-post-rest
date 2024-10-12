@@ -273,8 +273,11 @@ Exemplo de Header nos métodos que requerem o Authorization Bearer Token de Prof
   - 400 Bad Request: Se os dados enviados para a API forem inválidos.
   - 404 Not Found: Se Usuário ou Senha fornecidas forem inválidas.
  
-Exemplo de requisição via Postman:
+Exemplo de requisição com sucesso via Postman:
 ![image](https://github.com/user-attachments/assets/8b5e1eaf-51d2-48f2-9867-75ba58e507a0)
+
+Exemplo de requisição com dados inválidos via Postman:
+![image](https://github.com/user-attachments/assets/33a0aaa5-59cd-44dd-9667-53d6ad1aabb5)
 
 ### Criar Post
 - Método: `POST`
