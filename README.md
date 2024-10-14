@@ -2,6 +2,11 @@
 
 Esta API REST permite o gerenciamento de posts, oferecendo funcionalidades para alunos e professores. Desenvolvida com Node.js, ela facilita a criação, leitura, visualização, atualização e exclusão de posts de forma eficiente e centralizada.
 
+## Repositório Github
+
+Para acessar o repositório, acesse:
+https://github.com/andretheodoro/api-post-rest
+
 ## Descrição
 
 Atualmente, a maioria dos professores e professoras da rede pública de educação não possuem plataformas onde postar suas aulas e transmitir conhecimento para alunos e alunas de forma prática, centralizada e tecnológica. 
