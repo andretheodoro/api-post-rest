@@ -4,7 +4,7 @@ Esta API REST permite o gerenciamento de posts, oferecendo funcionalidades para 
 
 ## Repositório Github
 
-Para acessar o repositório, acesse:
+Repositório disponível em:
 https://github.com/andretheodoro/api-post-rest
 
 ## Descrição
