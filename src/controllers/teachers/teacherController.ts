@@ -534,8 +534,9 @@ export async function login(
             return next(new InvalidCredentialsError())
         }
         const token = generateToken(username) // Gera o token
+        const idTeacher = teacher.id
 
-        res.status(200).send({ token: token })
+        res.status(200).send({ token: token, idTeacher: idTeacher })
     } catch (error: any) {
         // Passa o erro para o middleware de erro
         next(error)

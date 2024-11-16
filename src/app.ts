@@ -7,6 +7,13 @@ import setupSwagger from './swagger'
 import errorHandler from './middleware/errorHandler'
 
 export const app = express()
+import cors from 'cors'
+
+app.use(
+    cors({
+        origin: 'http://localhost:5173', // origem do front-end
+    }),
+)
 
 // Middleware para analisar o corpo das requisições em formato JSON
 app.use(express.json())
