@@ -52,3 +52,24 @@ export const authMiddleware = (req: any, res: any, next: any) => {
         next()
     })
 }
+
+export const isAuthenticated = (req: any, res: any) => {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1] // "Bearer TOKEN"
+    console.log(authHeader)
+    console.log(token)
+    if (!token) {
+        return res.status(403).json({ message: 'Token não fornecido' })
+    }
+
+    jwt.verify(token, env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            return res
+                .status(401)
+                .json({ message: 'Token inválido ou expirado' })
+        }
+        req.userId = decoded.id // Armazena o ID do usuário na requisição
+        console.log('aaaaaa')
+        return res.status(200).json({ message: 'Token válido', ok: true })
+    })
+}
