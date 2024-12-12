@@ -8,6 +8,7 @@ import errorHandler from './middleware/errorHandler'
 
 export const app = express()
 import cors from 'cors'
+import notesRouter from './routes/notes/notesRoutes'
 
 app.use(
     cors({
@@ -26,6 +27,7 @@ app.use('/api/posts', postRouter)
 app.use('/api/posts', teacherRouter)
 app.use('/api/posts', studentRouter)
 app.use('/api', teacherLoginRouter)
+app.use('/api', notesRouter)
 
 app.use(errorHandler) // Filtro de exceção deve ser o último middleware
 
