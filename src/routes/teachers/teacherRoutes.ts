@@ -5,6 +5,9 @@ import {
     getPostByIdTeacher,
     deletePost,
     searchPosts,
+    getTeacher,
+    createTeacher,
+    updateTeacher,
 } from '../../controllers/teachers/teacherController'
 import { authMiddleware } from '../../middleware/authMiddleware'
 
@@ -24,5 +27,14 @@ teacherRouter.get('/professor/:id', authMiddleware, getPostByIdTeacher)
 
 //DELETE /posts/:id - Exclusão de Postagens:
 teacherRouter.delete('/:id', authMiddleware, deletePost)
+
+//GET /teacher - Busca de Professores:
+teacherRouter.get('/teacher', getTeacher)
+
+//POST /teacher - Criação de Professores:
+teacherRouter.post('/teacher', authMiddleware, createTeacher)
+
+//PUT /teacher/:id - Edição de Professores:
+teacherRouter.put('/teacher/:id', authMiddleware, updateTeacher)
 
 export default teacherRouter

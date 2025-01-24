@@ -121,3 +121,48 @@ export const loginTeacher = async (
         throw err
     }
 }
+
+//Função para inserir um Professor
+export const insertTeacher = async (teacher: ITeacher): Promise<void> => {
+    const { name, password } = teacher
+
+    try {
+        await database.clientInstance?.query(
+            'INSERT INTO TEACHER (NAME, PASSWORD) VALUES ($1, $2)',
+            [name, password],
+        )
+    } catch (err) {
+        console.error('Erro ao inserir um novo Professor no BD', err)
+        throw err
+    }
+}
+
+// Função para atualizar um professor existente
+export const updateTeacherById = async (
+    id: number,
+    teacher: ITeacher,
+): Promise<void> => {
+    const { name, password } = teacher
+
+    try {
+        await database.clientInstance?.query(
+            'UPDATE TEACHER SET name = $1, password = $2 WHERE id = $3',
+            [name, password, id],
+        )
+    } catch (err) {
+        console.error('Erro ao atualizar um Professor', err)
+        throw err
+    }
+}
+
+export const getAllTeacher = async (): Promise<ITeacher[]> => {
+    try {
+        const result = await database.clientInstance?.query(
+            `SELECT ID, NAME, PASSWORD FROM TEACHER`,
+        )
+        return result?.rows || []
+    } catch (err) {
+        console.error('Erro ao buscar professores no BD', err)
+        throw err
+    }
+}

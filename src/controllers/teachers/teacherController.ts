@@ -7,6 +7,9 @@ import {
     postExists,
     searchPostsByKeyword,
     loginTeacher,
+    insertTeacher,
+    updateTeacherById,
+    getAllTeacher,
 } from '../../models/teachers/teacherModel'
 import { IPost } from '../../models/posts/post.interface'
 import { InvalidCredentialsError } from '../../middleware/errors/invalid-credentials-error'
@@ -19,6 +22,12 @@ import { loginTeacherSchema } from '../../models/schemas/loginTeacher.schema'
 import { generateToken } from '../../middleware/authMiddleware'
 import { createPostSchema } from '../../models/schemas/createPost.schema'
 import { getPostByIdTeacherSchema } from '../../models/schemas/getPostByIdTeacher.schema'
+import { ITeacher } from '../../models/teachers/teacher.interface'
+import { createTeacherSchema } from '../../models/schemas/createTeacher.schema'
+import {
+    updateTeacherSchema,
+    updateTeacherSchemaParam,
+} from '../../models/schemas/updateTeacher.schema'
 
 /**
  * @swagger
@@ -539,6 +548,73 @@ export async function login(
         res.status(200).send({ token: token, idTeacher: idTeacher })
     } catch (error: any) {
         // Passa o erro para o middleware de erro
+        next(error)
+    }
+}
+
+export const createTeacher = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+): Promise<void> => {
+    try {
+        // Validação do corpo da requisição, com base no schema de criação de professor
+        const validateCreatePost = createTeacherSchema.parse(req.body)
+
+        const teacherData: ITeacher = {
+            name: validateCreatePost.name,
+            password: validateCreatePost.password,
+        }
+        await insertTeacher(teacherData)
+        res.status(201).json(teacherData)
+    } catch (error) {
+        // Passa o erro para o middleware de erro
+        next(error)
+    }
+}
+
+export const updateTeacher = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+): Promise<void> => {
+    try {
+        const { id } = req.params // Pega o id do professor da URL
+        const validateUpdateTeacherParam = updateTeacherSchemaParam.parse(
+            req.params,
+        )
+
+        // Validação do corpo da requisição, com base no schema de criação de professor
+        const validateUpdateTeacher = updateTeacherSchema.parse(req.body)
+
+        const teacherData: ITeacher = {
+            name: validateUpdateTeacher.name,
+            password: validateUpdateTeacher.password,
+        }
+
+        // Verificar se o professor existe
+        const exists = await postExists(validateUpdateTeacherParam.id)
+        if (!exists) {
+            res.status(404).json({ message: 'Professor não encontrado' })
+            return
+        }
+
+        await updateTeacherById(Number(id), teacherData)
+        res.status(200).json(teacherData)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getTeacher = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    try {
+        const teachers = await getAllTeacher() // Acesso à conexão do banco de dados
+        res.json(teachers)
+    } catch (error) {
         next(error)
     }
 }
