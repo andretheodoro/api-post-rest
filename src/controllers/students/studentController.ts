@@ -1,5 +1,14 @@
 import { NextFunction, Request, Response } from 'express'
-import { getAllPosts, findPostById } from '../../models/students/studentModel'
+import {
+    getAllPosts,
+    findPostById,
+    insertStudent,
+    updateStudentById,
+    getAllStudent,
+} from '../../models/students/studentModel'
+import { IStudent } from '../../models/students/student.interface'
+import { createStudentSchema } from '../../models/schemas/createStudent.schema'
+import { updateStudentSchema } from '../../models/schemas/updateStudent.schema'
 
 /**
  * @swagger
@@ -152,6 +161,62 @@ export const getPostById = async (
         } else {
             res.json(post)
         }
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const createStudent = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+): Promise<void> => {
+    try {
+        // Validação do corpo da requisição, com base no schema de criação de estudante
+        const validateCreateStudent = createStudentSchema.parse(req.body)
+
+        const studentData: IStudent = {
+            name: validateCreateStudent.name,
+            contact: validateCreateStudent.contact,
+        }
+        await insertStudent(studentData)
+        res.status(201).json(studentData)
+    } catch (error) {
+        // Passa o erro para o middleware de erro
+        next(error)
+    }
+}
+
+export const updateStudent = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+): Promise<void> => {
+    try {
+        const { id } = req.params // Pega o id do estudante da URL
+        // Validação do corpo da requisição, com base no schema de criação de estudante
+        const validateUpdateTeacher = updateStudentSchema.parse(req.body)
+
+        const studentData: IStudent = {
+            name: validateUpdateTeacher.name,
+            contact: validateUpdateTeacher.contact,
+        }
+
+        await updateStudentById(Number(id), studentData)
+        res.status(200).json(studentData)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getStudent = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    try {
+        const students = await getAllStudent() // Acesso à conexão do banco de dados
+        res.json(students)
     } catch (error) {
         next(error)
     }

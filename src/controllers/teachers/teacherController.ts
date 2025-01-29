@@ -24,10 +24,7 @@ import { createPostSchema } from '../../models/schemas/createPost.schema'
 import { getPostByIdTeacherSchema } from '../../models/schemas/getPostByIdTeacher.schema'
 import { ITeacher } from '../../models/teachers/teacher.interface'
 import { createTeacherSchema } from '../../models/schemas/createTeacher.schema'
-import {
-    updateTeacherSchema,
-    updateTeacherSchemaParam,
-} from '../../models/schemas/updateTeacher.schema'
+import { updateTeacherSchema } from '../../models/schemas/updateTeacher.schema'
 
 /**
  * @swagger
@@ -559,11 +556,11 @@ export const createTeacher = async (
 ): Promise<void> => {
     try {
         // Validação do corpo da requisição, com base no schema de criação de professor
-        const validateCreatePost = createTeacherSchema.parse(req.body)
+        const validateCreateTeacher = createTeacherSchema.parse(req.body)
 
         const teacherData: ITeacher = {
-            name: validateCreatePost.name,
-            password: validateCreatePost.password,
+            name: validateCreateTeacher.name,
+            password: validateCreateTeacher.password,
         }
         await insertTeacher(teacherData)
         res.status(201).json(teacherData)
@@ -580,9 +577,6 @@ export const updateTeacher = async (
 ): Promise<void> => {
     try {
         const { id } = req.params // Pega o id do professor da URL
-        const validateUpdateTeacherParam = updateTeacherSchemaParam.parse(
-            req.params,
-        )
 
         // Validação do corpo da requisição, com base no schema de criação de professor
         const validateUpdateTeacher = updateTeacherSchema.parse(req.body)
@@ -590,13 +584,6 @@ export const updateTeacher = async (
         const teacherData: ITeacher = {
             name: validateUpdateTeacher.name,
             password: validateUpdateTeacher.password,
-        }
-
-        // Verificar se o professor existe
-        const exists = await postExists(validateUpdateTeacherParam.id)
-        if (!exists) {
-            res.status(404).json({ message: 'Professor não encontrado' })
-            return
         }
 
         await updateTeacherById(Number(id), teacherData)
