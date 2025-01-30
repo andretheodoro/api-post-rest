@@ -10,6 +10,7 @@ import {
     insertTeacher,
     updateTeacherById,
     getAllTeacher,
+    deleteTeacherById,
 } from '../../models/teachers/teacherModel'
 import { IPost } from '../../models/posts/post.interface'
 import { InvalidCredentialsError } from '../../middleware/errors/invalid-credentials-error'
@@ -25,6 +26,7 @@ import { getPostByIdTeacherSchema } from '../../models/schemas/getPostByIdTeache
 import { ITeacher } from '../../models/teachers/teacher.interface'
 import { createTeacherSchema } from '../../models/schemas/createTeacher.schema'
 import { updateTeacherSchema } from '../../models/schemas/updateTeacher.schema'
+import { deleteTeacherSchema } from '../../models/schemas/deleteTeacher.schema'
 
 /**
  * @swagger
@@ -601,6 +603,36 @@ export const getTeacher = async (
     try {
         const teachers = await getAllTeacher() // Acesso à conexão do banco de dados
         res.json(teachers)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const deleteTeacher = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+): Promise<void> => {
+    try {
+        const validateDeleteTeacher = deleteTeacherSchema.parse(req.params)
+
+        // Validação do corpo da requisição, com base no schema de get post por id professor
+        const validateGetByIdTeacher = getPostByIdTeacherSchema.parse(
+            req.params,
+        )
+        // console.log(validateGetByIdTeacher)
+        const post = await findPostByIdTeacher(validateGetByIdTeacher.id)
+
+        if (post.length == 0) {
+            // Tenta excluir o Professor pelo ID
+            await deleteTeacherById(validateDeleteTeacher.id)
+            res.status(200).json({ message: 'Professor deletado com sucesso!' })
+        } else {
+            res.status(404).json({
+                message:
+                    'Professor(a) possui Posts criados, exclusão não permitida.',
+            })
+        }
     } catch (error) {
         next(error)
     }

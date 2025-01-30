@@ -9,6 +9,8 @@ import {
 import { IStudent } from '../../models/students/student.interface'
 import { createStudentSchema } from '../../models/schemas/createStudent.schema'
 import { updateStudentSchema } from '../../models/schemas/updateStudent.schema'
+import { deleteTeacherSchema } from '../../models/schemas/deleteTeacher.schema'
+import { deleteTeacherById } from '../../models/teachers/teacherModel'
 
 /**
  * @swagger
@@ -217,6 +219,22 @@ export const getStudent = async (
     try {
         const students = await getAllStudent() // Acesso à conexão do banco de dados
         res.json(students)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const deleteStudent = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+): Promise<void> => {
+    try {
+        const validateDeleteStudent = deleteTeacherSchema.parse(req.params)
+
+        // Tenta excluir o estudante pelo ID
+        await deleteTeacherById(validateDeleteStudent.id)
+        res.status(200).json({ message: 'Aluno deletado com sucesso!' })
     } catch (error) {
         next(error)
     }

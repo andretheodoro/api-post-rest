@@ -4,6 +4,6 @@ import { isAuthenticated } from '../../middleware/authMiddleware'
 
 const teacherLoginRouter = Router()
 
-teacherLoginRouter.post('/professor/login', login)
-teacherLoginRouter.get('/professor/isAuthenticated', isAuthenticated)
+teacherLoginRouter.post('/teacher/login', login)
+teacherLoginRouter.get('/teacher/isAuthenticated', isAuthenticated)
 export default teacherLoginRouter

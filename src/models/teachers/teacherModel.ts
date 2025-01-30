@@ -166,3 +166,16 @@ export const getAllTeacher = async (): Promise<ITeacher[]> => {
         throw err
     }
 }
+
+// Função para excluir um professor pelo id
+export const deleteTeacherById = async (id: number): Promise<void> => {
+    try {
+        await database.clientInstance?.query(
+            'DELETE FROM TEACHER WHERE id = $1',
+            [id],
+        )
+    } catch (err) {
+        console.error('Erro ao deletar um Professor', err)
+        throw err
+    }
+}
