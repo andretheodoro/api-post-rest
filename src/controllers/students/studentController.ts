@@ -5,12 +5,12 @@ import {
     insertStudent,
     updateStudentById,
     getAllStudent,
+    deleteStudentById,
 } from '../../models/students/studentModel'
 import { IStudent } from '../../models/students/student.interface'
 import { createStudentSchema } from '../../models/schemas/createStudent.schema'
 import { updateStudentSchema } from '../../models/schemas/updateStudent.schema'
-import { deleteTeacherSchema } from '../../models/schemas/deleteTeacher.schema'
-import { deleteTeacherById } from '../../models/teachers/teacherModel'
+import { deleteStudentSchema } from '../../models/schemas/deleteStudent.schema'
 
 /**
  * @swagger
@@ -197,11 +197,11 @@ export const updateStudent = async (
     try {
         const { id } = req.params // Pega o id do estudante da URL
         // Validação do corpo da requisição, com base no schema de criação de estudante
-        const validateUpdateTeacher = updateStudentSchema.parse(req.body)
+        const validateUpdateStudent = updateStudentSchema.parse(req.body)
 
         const studentData: IStudent = {
-            name: validateUpdateTeacher.name,
-            contact: validateUpdateTeacher.contact,
+            name: validateUpdateStudent.name,
+            contact: validateUpdateStudent.contact,
         }
 
         await updateStudentById(Number(id), studentData)
@@ -230,10 +230,10 @@ export const deleteStudent = async (
     next: NextFunction,
 ): Promise<void> => {
     try {
-        const validateDeleteStudent = deleteTeacherSchema.parse(req.params)
+        const validateDeleteStudent = deleteStudentSchema.parse(req.params)
 
         // Tenta excluir o estudante pelo ID
-        await deleteTeacherById(validateDeleteStudent.id)
+        await deleteStudentById(validateDeleteStudent.id)
         res.status(200).json({ message: 'Aluno deletado com sucesso!' })
     } catch (error) {
         next(error)
