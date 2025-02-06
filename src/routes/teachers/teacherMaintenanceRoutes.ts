@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import {
+    getTeacherByIdteste,
     createTeacher,
     deleteTeacher,
     getTeacher,
@@ -11,6 +12,9 @@ const teacherMaintenanceRouter = Router()
 
 //GET /teacher - Busca de Professores:
 teacherMaintenanceRouter.get('/teacher', authMiddleware, getTeacher)
+
+//GET /teacher/:id - Buscar Professor por ID:
+teacherMaintenanceRouter.get('/teacher/:id', authMiddleware, getTeacherByIdteste)
 
 //POST /teacher - Criação de Professores:
 teacherMaintenanceRouter.post('/teacher', authMiddleware, createTeacher)

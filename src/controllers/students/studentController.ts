@@ -175,7 +175,7 @@ export const createStudent = async (
 ): Promise<void> => {
     try {
         // Validação do corpo da requisição, com base no schema de criação de estudante
-        const validateCreateStudent = createStudentSchema.parse(req.body)
+        const validateCreateStudent = createStudentSchema.parse(req.body) as IStudent
 
         const studentData: IStudent = {
             name: validateCreateStudent.name,

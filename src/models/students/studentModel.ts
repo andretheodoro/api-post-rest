@@ -5,7 +5,7 @@ import { IStudent } from './student.interface'
 export const getAllPosts = async (): Promise<IPost[]> => {
     try {
         const result = await database.clientInstance?.query(
-            `SELECT id, title, author, description, to_char(CREATION, 'YYYY-MM-DD') creation, to_char(update_date, 'YYYY-MM-DD') update_date, idteacher FROM posts`,
+            `SELECT id, title, author, description, to_char(CREATION, 'YYYY-MM-DD') creation, to_char(update_date, 'YYYY-MM-DD') update_date, idteacher FROM posts order by id asc`,
         )
         return result?.rows || []
     } catch (err) {
@@ -68,7 +68,7 @@ export const updateStudentById = async (
 export const getAllStudent = async (): Promise<IStudent[]> => {
     try {
         const result = await database.clientInstance?.query(
-            `SELECT ID, NAME, CONTACT FROM STUDENT`,
+            `SELECT ID, NAME, CONTACT FROM STUDENT order by id asc`,
         )
         return result?.rows || []
     } catch (err) {

@@ -11,4 +11,7 @@ export class Teacher implements ITeacher {
 
     @Column({ name: 'password', type: 'varchar' })
     password: string
+
+    @Column({ name: 'contact', type: 'varchar' })
+    contact: string
 }

@@ -20,7 +20,7 @@ export const insertPost = async (post: IPost): Promise<void> => {
 export const findPostByIdTeacher = async (id: number): Promise<IPost[]> => {
     try {
         const result = await database.clientInstance?.query(
-            `SELECT id, title, author, description, to_char(CREATION, 'YYYY-MM-DD') creation,  to_char(update_date, 'YYYY-MM-DD') update_date, idteacher FROM posts WHERE idteacher = $1`,
+            `SELECT id, title, author, description, to_char(CREATION, 'YYYY-MM-DD') creation,  to_char(update_date, 'YYYY-MM-DD') update_date, idteacher FROM posts WHERE idteacher = $1 order by id asc`,
             [id],
         )
         return result?.rows || []
@@ -95,7 +95,7 @@ export const searchPostsByKeyword = async (keyword: string) => {
         const result = await database.clientInstance?.query(
             `SELECT id, title, author, description, to_char(CREATION, 'YYYY-MM-DD') creation, to_char(update_date, 'YYYY-MM-DD') update_date, idteacher 
        FROM posts 
-       WHERE title ILIKE $1 OR description ILIKE $1`,
+       WHERE title ILIKE $1 OR description ILIKE $1 order by id asc`,
             [searchTerm],
         )
         return result?.rows || []
@@ -124,12 +124,12 @@ export const loginTeacher = async (
 
 //Função para inserir um Professor
 export const insertTeacher = async (teacher: ITeacher): Promise<void> => {
-    const { name, password } = teacher
+    const { name, password, contact } = teacher
 
     try {
         await database.clientInstance?.query(
-            'INSERT INTO TEACHER (NAME, PASSWORD) VALUES ($1, $2)',
-            [name, password],
+            'INSERT INTO TEACHER (NAME, PASSWORD,CONTACT) VALUES ($1, $2, $3)',
+            [name, password, contact],
         )
     } catch (err) {
         console.error('Erro ao inserir um novo Professor no BD', err)
@@ -142,12 +142,12 @@ export const updateTeacherById = async (
     id: number,
     teacher: ITeacher,
 ): Promise<void> => {
-    const { name, password } = teacher
+    const { name, password, contact } = teacher
 
     try {
         await database.clientInstance?.query(
-            'UPDATE TEACHER SET name = $1, password = $2 WHERE id = $3',
-            [name, password, id],
+            'UPDATE TEACHER SET name = $1, password = $2, contact = $4 WHERE id = $3',
+            [name, password, id, contact],
         )
     } catch (err) {
         console.error('Erro ao atualizar um Professor', err)
@@ -158,7 +158,7 @@ export const updateTeacherById = async (
 export const getAllTeacher = async (): Promise<ITeacher[]> => {
     try {
         const result = await database.clientInstance?.query(
-            `SELECT ID, NAME, PASSWORD FROM TEACHER`,
+            `SELECT ID, NAME, PASSWORD, CONTACT FROM TEACHER order by id asc`,
         )
         return result?.rows || []
     } catch (err) {
@@ -176,6 +176,23 @@ export const deleteTeacherById = async (id: number): Promise<void> => {
         )
     } catch (err) {
         console.error('Erro ao deletar um Professor', err)
+        throw err
+    }
+}
+
+
+// Função para buscar os dado dos profesor para executar a atualização de senha
+export const getTeacherById = async (id: number): Promise<ITeacher> => {
+    try {
+        const result = await database.clientInstance?.query(
+            'SELECT * FROM TEACHER WHERE id = $1',
+            [id],
+        )
+        console.log('result', result)
+
+        return result?.rows[0] || null
+    } catch (err) {
+        console.error('Erro ao buscar o Professor', err)
         throw err
     }
 }

@@ -11,6 +11,7 @@ import {
     updateTeacherById,
     getAllTeacher,
     deleteTeacherById,
+    getTeacherById,
 } from '../../models/teachers/teacherModel'
 import { IPost } from '../../models/posts/post.interface'
 import { InvalidCredentialsError } from '../../middleware/errors/invalid-credentials-error'
@@ -25,7 +26,7 @@ import { createPostSchema } from '../../models/schemas/createPost.schema'
 import { getPostByIdTeacherSchema } from '../../models/schemas/getPostByIdTeacher.schema'
 import { ITeacher } from '../../models/teachers/teacher.interface'
 import { createTeacherSchema } from '../../models/schemas/createTeacher.schema'
-import { updateTeacherSchema } from '../../models/schemas/updateTeacher.schema'
+import { updateTeacherSchema, updateTeacherSchemaParam } from '../../models/schemas/updateTeacher.schema'
 import { deleteTeacherSchema } from '../../models/schemas/deleteTeacher.schema'
 
 /**
@@ -558,10 +559,11 @@ export const createTeacher = async (
 ): Promise<void> => {
     try {
         // Validação do corpo da requisição, com base no schema de criação de professor
-        const validateCreateTeacher = createTeacherSchema.parse(req.body)
+        const validateCreateTeacher = createTeacherSchema.parse(req.body) as ITeacher
 
         const teacherData: ITeacher = {
             name: validateCreateTeacher.name,
+            contact: validateCreateTeacher.contact,
             password: validateCreateTeacher.password,
         }
         await insertTeacher(teacherData)
@@ -585,6 +587,7 @@ export const updateTeacher = async (
 
         const teacherData: ITeacher = {
             name: validateUpdateTeacher.name,
+            contact: validateUpdateTeacher.contact,
             password: validateUpdateTeacher.password,
         }
 
@@ -632,6 +635,34 @@ export const deleteTeacher = async (
                 message:
                     'Professor(a) possui Posts criados, exclusão não permitida.',
             })
+        }
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+export const getTeacherByIdteste = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+): Promise<void> => {
+    try {
+        console.log("cheguei aqui")
+        // Validação do corpo da requisição, com base no schema de get post por id professor
+        const validateGetTeacherById = updateTeacherSchemaParam.parse(
+            req.params,
+        )
+        // console.log(validateGetByIdTeacher)
+        const teacher = await getTeacherById(validateGetTeacherById.id)
+        console.log(teacher)
+
+        if (teacher == null) {
+            res.status(404).json({
+                message: 'Professor(a) não encontrado.',
+            })
+        } else {
+            res.json(teacher)
         }
     } catch (error) {
         next(error)
