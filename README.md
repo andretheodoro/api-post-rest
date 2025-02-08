@@ -200,6 +200,7 @@ O script para criar as tabelas no banco de dados é o seguinte:
 CREATE TABLE TEACHER (
     ID SERIAL,
     NAME VARCHAR(100),
+    CONTACT varchar(50),
     PRIMARY KEY (ID)
 );
 
