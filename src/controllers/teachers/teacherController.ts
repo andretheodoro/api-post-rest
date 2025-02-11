@@ -535,14 +535,14 @@ export async function login(
 ): Promise<void> {
     try {
         // Schema de validação usando Zod
-        const { username, password } = loginTeacherSchema.parse(req.body)
+        const { username, password, isMobile } = loginTeacherSchema.parse(req.body)
         const teacher = await loginTeacher(username, password)
         // console.log('controller: ', teacher)
         // const doestPasswordMatch = await compare(password, teacher.password)
         if (teacher === null) {
             return next(new InvalidCredentialsError())
         }
-        const token = generateToken(username) // Gera o token
+        const token = generateToken(username, isMobile) // Gera o token
         const idTeacher = teacher.id
 
         res.status(200).send({ token: token, idTeacher: idTeacher })

@@ -7,4 +7,5 @@ export const loginTeacherSchema = z.object({
     password: z.string().min(5, {
         message: 'É obrigatório, e deve conter no minimo 5 caractere',
     }),
+    isMobile: z.boolean().default(false),
 })
